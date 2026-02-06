@@ -1712,7 +1712,7 @@
                 console.log('Auth success!');
                 currentUser = data.username;
                 currentToken = data.token;
-                isAdmin = data.is_admin || false;
+                isAdmin = data.admin || false;  // Backend returns 'admin', not 'is_admin'
                 
                 // Save session to localStorage
                 localStorage.setItem('chatUser', currentUser);
