@@ -62,6 +62,10 @@ class ChangePassword(BaseModel):
     username: str
     new_password: str
 
+class MakeAdmin(BaseModel):
+    username: str
+    secret_key: str = "admin_secret_2026"
+
 # Helper functions
 def hash_password(password: str) -> str:
     return hashlib.sha256(password.encode()).hexdigest()
@@ -330,6 +334,21 @@ def change_password(change: ChangePassword, db: Session = Depends(get_db)):
     db.commit()
     
     return {"message": f"Password for {change.username} has been changed successfully"}
+
+@app.post("/admin/promote_to_admin")
+def promote_to_admin(request: MakeAdmin, db: Session = Depends(get_db)):
+    # Simple secret key check for security
+    if request.secret_key != "admin_secret_2026":
+        raise HTTPException(status_code=403, detail="Invalid secret key")
+    
+    user = get_user_by_username(db, request.username)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    user.is_admin = True
+    db.commit()
+    
+    return {"message": f"User {request.username} is now an admin", "username": request.username, "is_admin": True}
 
 @app.get("/admin/all_conversations")
 def get_all_conversations(db: Session = Depends(get_db)):
