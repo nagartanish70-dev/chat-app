@@ -1504,8 +1504,8 @@
     </div>
 
     <script>
-        // Use ngrok for public access, or your IP:5000 for local network
-        const API_URL = 'http://localhost:8000';
+        // Use production backend on Railway
+        const API_URL = window.location.origin;
         // Force skip ngrok browser warning for API calls.
         const originalFetch = window.fetch.bind(window);
         window.fetch = (input, init = {}) => {
