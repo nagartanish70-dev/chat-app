@@ -182,6 +182,46 @@ def send_message(msg: MessageCreate, db: Session = Depends(get_db)):
     
     return {"message": "Message sent", "id": new_message.id}
 
+# File upload endpoint
+@app.post("/upload_chat_file")
+async def upload_chat_file(file: UploadFile = File(...)):
+    try:
+        # Generate unique filename
+        file_ext = os.path.splitext(file.filename)[1]
+        unique_filename = f"{uuid.uuid4()}{file_ext}"
+        file_path = os.path.join(CHAT_FILES_DIR, unique_filename)
+        
+        # Save file
+        with open(file_path, "wb") as f:
+            content = await file.read()
+            f.write(content)
+        
+        # Determine file type
+        file_type = "file"  # default
+        content_type = file.content_type or ""
+        if content_type.startswith("image/"):
+            file_type = "image"
+        elif content_type.startswith("video/"):
+            file_type = "video"
+        elif content_type.startswith("audio/"):
+            file_type = "audio"
+        
+        return {
+            "file_url": f"/chat_files/{unique_filename}",
+            "file_name": file.filename,
+            "file_type": file_type
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"File upload failed: {str(e)}")
+
+# Serve uploaded files
+@app.get("/chat_files/{filename}")
+async def get_chat_file(filename: str):
+    file_path = os.path.join(CHAT_FILES_DIR, filename)
+    if not os.path.exists(file_path):
+        raise HTTPException(status_code=404, detail="File not found")
+    return FileResponse(file_path)
+
 @app.get("/get_messages/{from_user}/{to_user}")
 def get_messages(from_user: str, to_user: str, db: Session = Depends(get_db)):
     # Get user IDs
