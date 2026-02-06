@@ -2474,7 +2474,9 @@
                         <span style="font-size:11px;color:#999;margin-left:5px;">(${isOnline ? 'Online' : 'Offline'})</span>
                     </div>
                 `;
-                div.addEventListener('click', () => {
+                div.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
                     openChat(username);
                     searchInput.value = '';
                     searchResults.classList.add('hidden');
@@ -2513,7 +2515,11 @@
                             <span style="font-size:11px;color:#999;margin-left:5px;">(${isOnline ? 'Online' : 'Offline'})</span>
                         </div>
                     `;
-                    div.addEventListener('click', () => openChat(username));
+                    div.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        openChat(username);
+                    });
                     conversationsList.appendChild(div);
                 });
             } catch (err) {
