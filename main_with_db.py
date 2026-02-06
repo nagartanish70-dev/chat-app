@@ -189,7 +189,7 @@ def get_messages(from_user: str, to_user: str, db: Session = Depends(get_db)):
     user2 = get_user_by_username(db, to_user)
     
     if not user1 or not user2:
-        return []
+        return {"messages": []}
     
     # Get messages between the two users
     messages = db.query(Message).filter(
@@ -215,13 +215,13 @@ def get_messages(from_user: str, to_user: str, db: Session = Depends(get_db)):
             "edited": msg.edited
         })
     
-    return result
+    return {"messages": result}
 
 @app.get("/get_conversations/{username}")
 def get_conversations(username: str, db: Session = Depends(get_db)):
     user = get_user_by_username(db, username)
     if not user:
-        return []
+        return {"conversations": []}
     
     # Get all users this user has messaged with
     conversations = db.query(User.username).distinct().join(
@@ -230,7 +230,18 @@ def get_conversations(username: str, db: Session = Depends(get_db)):
         ((Message.to_user_id == user.id) & (Message.from_user_id == User.id))
     ).filter(User.username != username).all()
     
-    return [username for username, in conversations]
+    return {"conversations": [username for username, in conversations]}
+
+# Search users
+@app.get("/search_users/{query}")
+def search_users(query: str, db: Session = Depends(get_db)):
+    # Search for users whose username contains the query (case-insensitive)
+    users = db.query(User.username).filter(
+        User.username.ilike(f"%{query}%"),
+        User.is_banned == False
+    ).limit(10).all()
+    
+    return {"users": [username for username, in users]}
 
 # Edit message
 @app.put("/edit_message/{message_id}")
