@@ -42,14 +42,15 @@ class MainActivity : ComponentActivity() {
             
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
-                // Override fetch to redirect localhost:8000 to 10.0.2.2:8000
+                // Override fetch to redirect localhost:8000 to production server
                 view?.evaluateJavascript(
                     """
                     (function() {
                         const originalFetch = window.fetch;
                         window.fetch = function(url, options) {
                             if (typeof url === 'string' && url.includes('localhost:8000')) {
-                                url = url.replace('localhost:8000', '10.0.2.2:8000');
+                                url = url.replace('localhost:8000', 'web-production-fa47e.up.railway.app');
+                                url = url.replace('http://', 'https://');
                             }
                             return originalFetch(url, options);
                         };
@@ -67,8 +68,8 @@ class MainActivity : ComponentActivity() {
             }
         }
         
-        // Load your actual website from localhost
-        webView.loadUrl("http://10.0.2.2:8080/chat.html")
+        // Load production website
+        webView.loadUrl("https://web-production-fa47e.up.railway.app")
         
         setContentView(webView)
     }

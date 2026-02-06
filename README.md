@@ -34,3 +34,5 @@ This app exposes your PC's storage as a secure REST API using FastAPI.
 ## Security
 - Uses HTTP Basic Auth. Change the default credentials before exposing to the internet.
 - For production, use HTTPS (behind a reverse proxy or with uvicorn's SSL options).
+
+# Updated 02/06/2026 06:30:38
