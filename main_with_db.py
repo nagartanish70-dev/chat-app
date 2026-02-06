@@ -245,8 +245,8 @@ def get_messages(from_user: str, to_user: str, db: Session = Depends(get_db)):
         
         result.append({
             "id": msg.id,
-            "from_user": sender.username,
-            "to_user": receiver.username,
+            "from": sender.username,
+            "to": receiver.username,
             "message": msg.message,
             "file_url": msg.file_url,
             "file_name": msg.file_name,
