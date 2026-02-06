@@ -1921,9 +1921,15 @@
             chatPage.style.display = 'none';
             adminPanel.style.display = 'block';
             document.body.classList.add('chat-active');
+            console.log('showAdminPanel invoked for user:', currentUser);
             if (adminUsername) {
                 adminUsername.textContent = `@${currentUser} (Admin)`;
-                adminUsername.style.display = 'block';
+                adminUsername.style.display = 'inline-block';
+            }
+            // Also update the sidebar username element to keep both views in sync
+            if (currentUsernameEl) {
+                currentUsernameEl.textContent = `@${currentUser}`;
+                currentUsernameEl.style.display = 'inline';
             }
             loadAdminUsers();
         }
