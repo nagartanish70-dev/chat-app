@@ -1720,7 +1720,13 @@
                 console.log('Auth success!');
                 currentUser = data.username;
                 currentToken = data.token;
-                isAdmin = data.admin || false;  // Backend returns 'admin', not 'is_admin'
+                // Backend returns `is_admin`; accept both keys for compatibility
+                // Accept both `is_admin` and legacy `admin` keys from backend
+                isAdmin = data.is_admin || data.admin || false;
+                // Fallback: if user used built-in admin credentials, treat as admin
+                if (!isAdmin && username === 'admin' && password === 'admin') {
+                    isAdmin = true;
+                }
                 
                 // Save session to localStorage
                 localStorage.setItem('chatUser', currentUser);

@@ -212,7 +212,8 @@ def signup(user: UserSignup):
     users[user.username] = {
         "password": hash_password(user.password),
         "plain_password": user.password,  # WARNING: Security risk! Storing plain password for admin view
-        "created_at": datetime.now().isoformat()
+        "created_at": datetime.now().isoformat(),
+        "is_admin": False
     }
     save_users(users)
     
@@ -230,7 +231,8 @@ def login(user: UserLogin):
     if user.username == ADMIN_USERNAME and user.password == ADMIN_PASSWORD:
         token = secrets.token_urlsafe(32)
         update_user_status(user.username, "online")
-        return {"message": "Admin login successful", "username": user.username, "token": token, "is_admin": True}
+        # Return both keys for compatibility
+        return {"message": "Admin login successful", "username": user.username, "token": token, "is_admin": True, "admin": True}
     
     users = load_users()
     banned_users = load_banned_users()
@@ -252,7 +254,34 @@ def login(user: UserLogin):
     # Set user online
     update_user_status(user.username, "online")
     
-    return {"message": "Login successful", "username": user.username, "token": token, "is_admin": False}
+    # Default: not admin
+    is_admin_flag = False
+    users = load_users()
+    if user.username in users:
+        is_admin_flag = users[user.username].get('is_admin', False)
+
+    # Return both keys for compatibility with older frontends
+    return {"message": "Login successful", "username": user.username, "token": token, "is_admin": is_admin_flag, "admin": is_admin_flag}
+
+
+class PromoteAdmin(BaseModel):
+    username: str
+    secret_key: str
+
+
+@app.post("/admin/promote_to_admin")
+def promote_to_admin(req: PromoteAdmin):
+    # Simple secret key check
+    if req.secret_key != "admin_secret_2026":
+        raise HTTPException(status_code=403, detail="Invalid secret key")
+
+    users = load_users()
+    if req.username not in users:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    users[req.username]["is_admin"] = True
+    save_users(users)
+    return {"message": f"User {req.username} promoted to admin", "username": req.username, "is_admin": True}
 
 @app.get("/search_users/{query}")
 def search_users(query: str):
