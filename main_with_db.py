@@ -1,5 +1,5 @@
 from fastapi import FastAPI, File, UploadFile, HTTPException, Depends
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
@@ -380,6 +380,16 @@ def get_admin_messages(user1: str, user2: str, db: Session = Depends(get_db)):
         })
     
     return result
+
+# Serve the chat.html frontend
+@app.get("/", response_class=HTMLResponse)
+@app.get("/chat", response_class=HTMLResponse)
+async def serve_chat():
+    try:
+        with open("chat.html", "r", encoding="utf-8") as f:
+            return HTMLResponse(content=f.read())
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="chat.html not found")
 
 if __name__ == "__main__":
     import uvicorn
