@@ -154,7 +154,7 @@ def get_online_status(db: Session = Depends(get_db)):
         OnlineUser.last_heartbeat >= cutoff_time
     ).all()
     
-    return {username: True for username, in online_users}
+    return {username[0]: True for username in online_users}
 
 # Messaging endpoints
 @app.post("/send_message")
@@ -466,7 +466,6 @@ def get_admin_messages(user1: str, user2: str, db: Session = Depends(get_db)):
         })
     
     return {"messages": result}
-    return result
 
 # Serve the chat.html frontend
 @app.get("/", response_class=HTMLResponse)
