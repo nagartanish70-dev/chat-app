@@ -1401,8 +1401,10 @@
                     <div class="sidebar-header">
                         <button class="menu-toggle-btn" id="menuToggleBtn" style="display:none;">☰</button>
                         <h3>Chat App</h3>
-                        <div class="username" id="currentUsername"></div>
-                        <button class="logout-btn" id="logoutBtn">Logout</button>
+                        <div style="display:flex;align-items:center;gap:10px;">
+                            <span class="username" id="currentUsername"></span>
+                            <button class="logout-btn" id="logoutBtn">Logout</button>
+                        </div>
                     </div>
                     <div class="search-box">
                         <input type="text" id="searchInput" placeholder="Search users...">
@@ -1740,7 +1742,10 @@
             authPage.style.display = 'none';
             chatPage.style.display = 'block';
             document.body.classList.add('chat-active');
-            currentUsernameEl.textContent = `@${currentUser}`;
+            if (currentUsernameEl) {
+                currentUsernameEl.textContent = `@${currentUser}`;
+                currentUsernameEl.style.display = 'inline';
+            }
             loadConversations();
             startHeartbeat();
             startStatusRefresh();
@@ -1884,15 +1889,20 @@
             currentUser = null;
             currentToken = null;
             currentChatUser = null;
-            
+
+            if (currentUsernameEl) {
+                currentUsernameEl.textContent = '';
+                currentUsernameEl.style.display = 'none';
+            }
+
             if (messageRefreshInterval) clearInterval(messageRefreshInterval);
             if (heartbeatInterval) clearInterval(heartbeatInterval);
             if (statusRefreshInterval) clearInterval(statusRefreshInterval);
-            
+
             // Remove full screen class
             document.body.classList.remove('chat-active');
             document.body.classList.remove('mobile-show-list');
-            
+
             authPage.style.display = 'flex';
             chatPage.style.display = 'none';
             authForm.reset();
@@ -1905,7 +1915,10 @@
             chatPage.style.display = 'none';
             adminPanel.style.display = 'block';
             document.body.classList.add('chat-active');
-            adminUsername.textContent = `@${currentUser} (Admin)`;
+            if (adminUsername) {
+                adminUsername.textContent = `@${currentUser} (Admin)`;
+                adminUsername.style.display = 'block';
+            }
             loadAdminUsers();
         }
 
@@ -2361,6 +2374,10 @@
             // Remove full screen class
             document.body.classList.remove('chat-active');
             
+            if (adminUsername) {
+                adminUsername.textContent = '';
+                adminUsername.style.display = 'none';
+            }
             authPage.style.display = 'flex';
             adminPanel.style.display = 'none';
             authForm.reset();
