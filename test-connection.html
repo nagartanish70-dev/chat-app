@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Connection Test</title>
+</head>
+<body>
+    <h1>Testing Backend Connection</h1>
+    <button onclick="testConnection()">Test Connection</button>
+    <button onclick="testSignup()">Test Signup</button>
+    <button onclick="testLogin()">Test Login</button>
+    <pre id="result"></pre>
+
+    <script>
+        const API_URL = 'http://localhost:8000';
+        const resultEl = document.getElementById('result');
+
+        async function testConnection() {
+            try {
+                resultEl.textContent = 'Testing connection...\n';
+                const res = await fetch(`${API_URL}/files`);
+                const data = await res.json();
+                resultEl.textContent += 'SUCCESS! Backend is reachable.\n';
+                resultEl.textContent += 'Files: ' + JSON.stringify(data, null, 2);
+            } catch (err) {
+                resultEl.textContent += 'ERROR: ' + err.message + '\n';
+                resultEl.textContent += 'Stack: ' + err.stack;
+            }
+        }
+
+        async function testSignup() {
+            try {
+                resultEl.textContent = 'Testing signup...\n';
+                const username = 'test' + Math.floor(Math.random() * 10000);
+                const res = await fetch(`${API_URL}/signup`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password: 'test1234' })
+                });
+                const data = await res.json();
+                resultEl.textContent += 'Response status: ' + res.status + '\n';
+                resultEl.textContent += 'Response: ' + JSON.stringify(data, null, 2);
+            } catch (err) {
+                resultEl.textContent += 'ERROR: ' + err.message + '\n';
+                resultEl.textContent += 'Stack: ' + err.stack;
+            }
+        }
+
+        async function testLogin() {
+            try {
+                resultEl.textContent = 'Testing login...\n';
+                const res = await fetch(`${API_URL}/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: 'testuser', password: 'test1234' })
+                });
+                const data = await res.json();
+                resultEl.textContent += 'Response status: ' + res.status + '\n';
+                resultEl.textContent += 'Response: ' + JSON.stringify(data, null, 2);
+            } catch (err) {
+                resultEl.textContent += 'ERROR: ' + err.message + '\n';
+                resultEl.textContent += 'Stack: ' + err.stack;
+            }
+        }
+    </script>
+</body>
+</html>

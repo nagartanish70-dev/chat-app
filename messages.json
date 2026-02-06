@@ -1,0 +1,665 @@
+[
+  {
+    "from": "tanish",
+    "to": "vipin",
+    "message": "hi",
+    "timestamp": "2026-02-05T23:33:59.120812",
+    "id": "56425624-852e-4dc5-a6f7-d9ef7b7db23f",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "from": "vipin",
+    "to": "tanish",
+    "message": "hello",
+    "timestamp": "2026-02-05T23:34:19.273362",
+    "id": "97981a67-6a46-45da-82cd-e9cd34cc1288",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "from": "tanish",
+    "to": "vipin",
+    "message": "ok",
+    "timestamp": "2026-02-05T23:34:26.496268",
+    "id": "037a4e2c-0760-450a-aa86-a49e7293da8f",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "from": "vipin",
+    "to": "tanish",
+    "message": "hh",
+    "timestamp": "2026-02-05T23:39:21.782039",
+    "id": "073fcc19-a5ad-4b63-a15a-56027d36e0c0",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "from": "tanish",
+    "to": "vipin",
+    "message": "efe",
+    "timestamp": "2026-02-05T23:39:24.905839",
+    "id": "af3aa152-b8f1-4e4f-9ffd-9118b594d3e9",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "from": "tanish",
+    "to": "tanishs",
+    "message": "hi",
+    "timestamp": "2026-02-06T00:01:57.744946",
+    "id": "e2decc1d-4332-4f29-b444-d19712c71073",
+    "edited": false,
+    "deleted_for": [],
+    "deleted_for_everyone": true
+  },
+  {
+    "from": "tanish",
+    "to": "vipin",
+    "message": "tth",
+    "timestamp": "2026-02-06T00:02:49.908780",
+    "id": "598e3d60-0ed2-4b98-a6a5-a1da8b151428",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "from": "tanish",
+    "to": "tanishs",
+    "message": "h",
+    "timestamp": "2026-02-06T00:03:31.338141",
+    "id": "58d6f9d1-289d-4f71-9f5f-7be4700a3e50",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "from": "tanishs",
+    "to": "tanish",
+    "message": "tht",
+    "timestamp": "2026-02-06T00:03:43.286762",
+    "id": "d3a0f5e7-6831-4ceb-ad42-2304179a4032",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "from": "tanishs",
+    "to": "tanish",
+    "message": "hth",
+    "timestamp": "2026-02-06T00:03:46.991503",
+    "id": "48c8f4c6-f581-4804-81f2-c785b73f44ed",
+    "edited": false,
+    "deleted_for": [
+      "tanish"
+    ]
+  },
+  {
+    "from": "tanish",
+    "to": "tanishs",
+    "message": "",
+    "timestamp": "2026-02-06T00:05:13.594027",
+    "file_url": "/download_chat_file/20260206_000513_valo im.MOV",
+    "file_name": "valo im.MOV",
+    "file_type": "video",
+    "id": "ed824ef2-46cb-4e97-aa46-379beccc7e94",
+    "edited": false,
+    "deleted_for": [],
+    "deleted_for_everyone": true
+  },
+  {
+    "from": "tanish",
+    "to": "vipin",
+    "message": "",
+    "timestamp": "2026-02-06T00:06:45.139036",
+    "file_url": "/download_chat_file/20260206_000645_wallpaperflare.com_wallpaper.jpg",
+    "file_name": "wallpaperflare.com_wallpaper.jpg",
+    "file_type": "image",
+    "id": "5118c49e-15f5-4f99-847d-e9c31906d84f",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "from": "tanish",
+    "to": "tanishs",
+    "message": "",
+    "timestamp": "2026-02-06T00:07:13.998561",
+    "file_url": "/download_chat_file/20260206_000713_zenitsu-agatsuma-ai-3840x2160-12533.png",
+    "file_name": "zenitsu-agatsuma-ai-3840x2160-12533.png",
+    "file_type": "image",
+    "id": "b851edd3-64a0-4610-909c-325d8ebbbc59",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "from": "tanish",
+    "to": "tanishs",
+    "message": "dg",
+    "timestamp": "2026-02-06T00:10:15.408056",
+    "id": "addc300c-34bf-4ed1-890d-fe2f3411dcdf",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "from": "tanishs",
+    "to": "tanish",
+    "message": "fwf",
+    "timestamp": "2026-02-06T00:10:20.507728",
+    "id": "722ba90d-e60b-426d-a045-3e32b500f9d7",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "from": "tanishs",
+    "to": "tanish",
+    "message": "",
+    "timestamp": "2026-02-06T00:11:59.334988",
+    "file_url": "/download_chat_file/20260206_001159_IMG_5284.MOV",
+    "file_name": "IMG_5284.MOV",
+    "file_type": "video",
+    "id": "8de6776f-a446-41ab-8398-a069c2838613",
+    "edited": false,
+    "deleted_for": [],
+    "deleted_for_everyone": true
+  },
+  {
+    "from": "tanish",
+    "to": "tanishs",
+    "message": "rr",
+    "timestamp": "2026-02-06T00:12:55.075871",
+    "id": "f6e11488-1a42-4e2e-87bc-41b3218d5724",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "from": "tanishs",
+    "to": "tanish",
+    "message": "hi",
+    "timestamp": "2026-02-06T00:20:16.926507",
+    "id": "35192fa6-82c9-4941-9a72-ea577c0898dd",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "from": "tanishs",
+    "to": "tanish",
+    "message": "m",
+    "timestamp": "2026-02-06T00:23:49.092791",
+    "id": "ccbe621c-4f08-4a16-8c92-63fa2030d512",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "id": "e328bf67-d574-4d24-8ece-fbc7a2d23f88",
+    "from": "tanish",
+    "to": "tanishs",
+    "message": "dd",
+    "timestamp": "2026-02-06T00:24:59.737652",
+    "edited": false,
+    "deleted_for": [],
+    "deleted_for_everyone": true
+  },
+  {
+    "id": "aca92db7-d28d-4b1c-a253-4d9ce02cee2a",
+    "from": "tanishs",
+    "to": "tanish",
+    "message": "hi",
+    "timestamp": "2026-02-06T00:25:12.444159",
+    "edited": false,
+    "deleted_for": [],
+    "deleted_for_everyone": true
+  },
+  {
+    "id": "c1e0a26a-63b0-49b2-864a-25436b4efde9",
+    "from": "tanish",
+    "to": "tanishs",
+    "message": "dd",
+    "timestamp": "2026-02-06T00:25:27.761548",
+    "edited": false,
+    "deleted_for": [
+      "tanishs"
+    ]
+  },
+  {
+    "id": "4016aa6b-6508-4d56-b9b4-2d8c519e32a0",
+    "from": "tanish",
+    "to": "tanishs",
+    "message": "gttt",
+    "timestamp": "2026-02-06T00:26:33.045976",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "id": "ac19bfd1-b6fa-43cc-bff8-02ec4f79b2f5",
+    "from": "tanish",
+    "to": "tanishs",
+    "message": "ththt",
+    "timestamp": "2026-02-06T00:26:42.711042",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "id": "5ae86761-6fc6-4012-8c09-562eb8f3db7e",
+    "from": "tanishs",
+    "to": "tanish",
+    "message": "efe",
+    "timestamp": "2026-02-06T00:29:14.463508",
+    "edited": false,
+    "deleted_for": [],
+    "deleted_for_everyone": true
+  },
+  {
+    "id": "128906a7-80df-42d0-868f-e28e9408c1c9",
+    "from": "tanish",
+    "to": "tanishs",
+    "message": "efefe",
+    "timestamp": "2026-02-06T00:29:23.644012",
+    "edited": true,
+    "deleted_for": [],
+    "edited_at": "2026-02-06T00:29:26.242299"
+  },
+  {
+    "id": "2707a141-ed08-4ffb-a328-2aa5a047b1e2",
+    "from": "tanish",
+    "to": "vipin",
+    "message": "r",
+    "timestamp": "2026-02-06T00:32:03.254910",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "id": "bc5533f0-f2e5-4774-bb1f-5cf360924d9a",
+    "from": "tanishs",
+    "to": "tanish",
+    "message": "ggjjjj",
+    "timestamp": "2026-02-06T00:42:43.240777",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "id": "fb260ae1-9d6c-4f55-986d-a36613fb1245",
+    "from": "tanishs",
+    "to": "tanish",
+    "message": "fg",
+    "timestamp": "2026-02-06T00:43:11.242722",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "id": "df8a15d8-95ad-400e-a5aa-af839032664e",
+    "from": "tanish",
+    "to": "tanishs",
+    "message": "hrh",
+    "timestamp": "2026-02-06T00:43:20.119171",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "id": "f23e479b-9861-44d8-b09b-2b1414cb8a20",
+    "from": "tanish",
+    "to": "rahul",
+    "message": "gh",
+    "timestamp": "2026-02-06T00:59:38.738180",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "id": "244de5b4-368c-4318-b381-5c1f9929fa10",
+    "from": "rahul",
+    "to": "tanish",
+    "message": "th",
+    "timestamp": "2026-02-06T00:59:49.796429",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "id": "debec8ea-ed30-4db6-94fe-85b86eb06480",
+    "from": "tanish",
+    "to": "rahul",
+    "message": "ok",
+    "timestamp": "2026-02-06T00:59:54.751271",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "id": "126d64ee-e871-482a-af3a-b8c5f9c8503b",
+    "from": "tanish",
+    "to": "rahul",
+    "message": "hjyddvdvd",
+    "timestamp": "2026-02-06T01:07:57.580220",
+    "edited": true,
+    "deleted_for": [],
+    "edited_at": "2026-02-06T01:08:02.382370"
+  },
+  {
+    "id": "f2d82fb0-f865-42f6-a20e-2c9683a72a94",
+    "from": "tanish",
+    "to": "rahul",
+    "message": "hi",
+    "timestamp": "2026-02-06T01:18:47.959273",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "id": "17a86506-d6ca-460d-ae95-40e62e6fdca5",
+    "from": "rahul",
+    "to": "tanish",
+    "message": "sss",
+    "timestamp": "2026-02-06T01:20:38.383325",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "id": "9a390a96-9fee-43d1-8f6d-1ded7a757327",
+    "from": "rahul",
+    "to": "tanish",
+    "message": "hi",
+    "timestamp": "2026-02-06T02:09:33.862298",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "id": "018e7ee7-3462-4ac5-9c4c-c4662d886605",
+    "from": "tanish",
+    "to": "rahul",
+    "message": "Hi",
+    "timestamp": "2026-02-06T02:09:58.133007",
+    "edited": true,
+    "deleted_for": [],
+    "edited_at": "2026-02-06T02:11:01.035282"
+  },
+  {
+    "id": "d4fa09df-2520-4863-9cb7-094acee23b4e",
+    "from": "tanish",
+    "to": "rahul",
+    "message": "",
+    "timestamp": "2026-02-06T02:10:25.860309",
+    "edited": false,
+    "deleted_for": [],
+    "file_url": "/download_chat_file/20260206_021025_voice_1770324025661.webm",
+    "file_name": "voice_1770324025661.webm",
+    "file_type": "file",
+    "deleted_for_everyone": true
+  },
+  {
+    "id": "69cca9ca-b658-4762-b95f-0cf59f1ff110",
+    "from": "tanish",
+    "to": "rahul",
+    "message": "",
+    "timestamp": "2026-02-06T02:26:31.368023",
+    "edited": false,
+    "deleted_for": [],
+    "file_url": "/download_chat_file/20260206_022631_voice_1770324991138.webm",
+    "file_name": "voice_1770324991138.webm",
+    "file_type": "file"
+  },
+  {
+    "id": "a1c5b224-d40d-49e9-bb08-b00cf31d91bd",
+    "from": "tanish",
+    "to": "rahul",
+    "message": "",
+    "timestamp": "2026-02-06T02:26:43.797336",
+    "edited": false,
+    "deleted_for": [],
+    "file_url": "/download_chat_file/20260206_022643_IMG_7900.png",
+    "file_name": "IMG_7900.png",
+    "file_type": "image"
+  },
+  {
+    "id": "72736052-a140-4d82-bfa3-ae70d45cda59",
+    "from": "tanish",
+    "to": "rahul",
+    "message": "",
+    "timestamp": "2026-02-06T02:26:52.806744",
+    "edited": false,
+    "deleted_for": [],
+    "file_url": "/download_chat_file/20260206_022652_IMG_7899.png",
+    "file_name": "IMG_7899.png",
+    "file_type": "image"
+  },
+  {
+    "id": "5b604516-5def-4c56-a0dd-8ae95c5172b5",
+    "from": "tanish",
+    "to": "rahul",
+    "message": "Hi",
+    "timestamp": "2026-02-06T02:39:06.770196",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "id": "95a051c3-1f6f-45db-b2d6-18759736597e",
+    "from": "tanish",
+    "to": "rahul",
+    "message": "How are you?",
+    "timestamp": "2026-02-06T02:39:21.570616",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "id": "2c22a724-8abe-4eb5-aee1-86f12242a680",
+    "from": "tanish",
+    "to": "vipin",
+    "message": "Hi",
+    "timestamp": "2026-02-06T02:45:08.406216",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "id": "fbe4337c-d93a-4286-91e1-9d330d12506d",
+    "from": "tanish",
+    "to": "vipin",
+    "message": "Hello",
+    "timestamp": "2026-02-06T02:45:19.296831",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "id": "a1a9cdbc-9b57-43f5-894c-db7e027bc66d",
+    "from": "tanish",
+    "to": "vipin",
+    "message": "Hi",
+    "timestamp": "2026-02-06T02:45:30.812260",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "id": "43e8a341-defd-4c64-a18e-5089c41b4b27",
+    "from": "tanish",
+    "to": "vipin",
+    "message": "Ji",
+    "timestamp": "2026-02-06T02:45:34.338943",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "id": "eb5f6905-9b70-431a-8e50-60a6bd07bdf7",
+    "from": "tanish",
+    "to": "rahul",
+    "message": "Hi",
+    "timestamp": "2026-02-06T02:48:39.705425",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "id": "f76a05c5-34f0-4391-9b6a-cc0affebb445",
+    "from": "tanish",
+    "to": "rahul",
+    "message": "Hi",
+    "timestamp": "2026-02-06T02:49:07.721288",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "id": "36e3ee35-caeb-48dd-9296-09c4bd985ef4",
+    "from": "tanish",
+    "to": "rahul",
+    "message": "Hi",
+    "timestamp": "2026-02-06T02:49:11.751360",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "id": "6ad24b4c-ac2b-4217-842f-6cd8697eaab9",
+    "from": "tanish",
+    "to": "rahul",
+    "message": "Hi",
+    "timestamp": "2026-02-06T02:49:31.671418",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "id": "b25fe612-c23d-4c9e-9c8a-f182dfb6e987",
+    "from": "tanish",
+    "to": "rahul",
+    "message": "Hi",
+    "timestamp": "2026-02-06T02:49:35.343457",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "id": "80f262ce-6b1f-4360-be92-15d57617f3a2",
+    "from": "tanish",
+    "to": "rahul",
+    "message": "Hi",
+    "timestamp": "2026-02-06T02:51:36.952696",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "id": "9d10e687-8899-4462-9367-92a6f7ede017",
+    "from": "tanish",
+    "to": "rahul",
+    "message": "Hi",
+    "timestamp": "2026-02-06T02:51:42.653358",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "id": "a69bd328-5887-4e31-be49-c936271c54e2",
+    "from": "tanish",
+    "to": "rahul",
+    "message": "Hi",
+    "timestamp": "2026-02-06T02:52:01.806377",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "id": "5d9f1c8b-0414-47a2-9960-b30eb6bca7ce",
+    "from": "tanish",
+    "to": "rahul",
+    "message": "Hello",
+    "timestamp": "2026-02-06T02:52:10.140955",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "id": "7ac6b4e3-ed7f-4e79-a1b9-12b1337e8907",
+    "from": "tanish",
+    "to": "rahul",
+    "message": "Hi",
+    "timestamp": "2026-02-06T02:52:25.998782",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "id": "c40b137f-b4cc-48e4-8056-80305b273c0c",
+    "from": "tanish",
+    "to": "rahul",
+    "message": "Hu",
+    "timestamp": "2026-02-06T02:55:07.733012",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "id": "ab48bdc4-f856-4674-8ad6-174693b0306e",
+    "from": "tanish",
+    "to": "rahul",
+    "message": "Hello",
+    "timestamp": "2026-02-06T02:55:15.959315",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "id": "7c4002ea-59be-4a2c-8b53-35bd35d27d72",
+    "from": "tanish",
+    "to": "vipin",
+    "message": "Hi",
+    "timestamp": "2026-02-06T02:55:42.500162",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "id": "a44dd611-36ca-44fe-b633-bab058cdb7f4",
+    "from": "rahul",
+    "to": "tanish",
+    "message": "hi",
+    "timestamp": "2026-02-06T03:12:20.671647",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "id": "c7611649-ef4b-4c52-99d2-781b3166dc69",
+    "from": "tanish",
+    "to": "rahul",
+    "message": "hi",
+    "timestamp": "2026-02-06T04:14:59.848518",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "id": "3354e7fb-c374-4070-b1e3-2f214eaeec70",
+    "from": "tanish",
+    "to": "rahul",
+    "message": "hii'",
+    "timestamp": "2026-02-06T04:15:39.091728",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "id": "e0e73867-e3b4-4a6d-98b7-a98534a22698",
+    "from": "tanish",
+    "to": "vipin",
+    "message": "ju",
+    "timestamp": "2026-02-06T04:15:55.268779",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "id": "cc9119ca-727b-4499-b84e-6093193e3282",
+    "from": "tanish",
+    "to": "tanishs",
+    "message": "jj",
+    "timestamp": "2026-02-06T04:16:03.583228",
+    "edited": false,
+    "deleted_for": []
+  },
+  {
+    "id": "fb17a0d0-a4fb-4dc5-b7c5-19e6aec69031",
+    "from": "admin",
+    "to": "tanish",
+    "message": "hi",
+    "timestamp": "2026-02-06T04:16:52.132936",
+    "edited": false,
+    "deleted_for": [
+      "tanish"
+    ]
+  },
+  {
+    "id": "f9d2cb39-b978-4e14-a14d-fcbd0c00b03d",
+    "from": "tanish",
+    "to": "admin",
+    "message": "fbn",
+    "timestamp": "2026-02-06T04:17:25.027055",
+    "edited": true,
+    "deleted_for": [],
+    "edited_at": "2026-02-06T04:51:11.473641",
+    "deleted_for_everyone": true
+  },
+  {
+    "id": "cc91feb8-14de-4eff-9a79-275124780932",
+    "from": "tanish",
+    "to": "rahul",
+    "message": "Hi",
+    "timestamp": "2026-02-06T04:39:20.244898",
+    "edited": false,
+    "deleted_for": []
+  }
+]

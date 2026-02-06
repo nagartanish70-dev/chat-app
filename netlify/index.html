@@ -1,0 +1,3075 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Application</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        body.chat-active {
+            display: block;
+            background: white;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+            max-width: 900px;
+            width: 90%;
+            height: 600px;
+        }
+        
+        body.chat-active .container {
+            max-width: 100%;
+            width: 100%;
+            height: 100vh;
+            border-radius: 0;
+            box-shadow: none;
+        }
+        
+        /* Login/Signup Page */
+        .auth-page {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            padding: 40px;
+        }
+        
+        .auth-page h2 {
+            color: #667eea;
+            margin-bottom: 30px;
+            font-size: 32px;
+        }
+        
+        .auth-form {
+            width: 100%;
+            max-width: 350px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+            margin-top: 10px;
+        }
+        
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .error-message {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 10px;
+            text-align: center;
+        }
+        
+        .success-message {
+            color: #27ae60;
+            font-size: 14px;
+            margin-top: 10px;
+            text-align: center;
+        }
+        
+        /* Chat Page */
+        .chat-page {
+            display: none;
+            height: 100%;
+        }
+        
+        .chat-container {
+            display: flex;
+            height: 100%;
+        }
+        
+        .sidebar {
+            width: 300px;
+            border-right: 1px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            background: #667eea;
+            color: white;
+        }
+        
+        .sidebar-header h3 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-header .username {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .logout-btn {
+            margin-top: 10px;
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid white;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .search-box {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        
+        .search-box input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .conversations-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        .conversation-item, .search-result-item {
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background 0.2s;
+            position: relative;
+        }
+        
+        .conversation-item:hover, .search-result-item:hover {
+            background: #f8f9fa;
+        }
+        
+        .conversation-item.active {
+            background: #e8eaf6;
+            border-left: 4px solid #667eea;
+        }
+        
+        .conversation-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .online-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-left: 8px;
+        }
+        
+        .online-indicator.online {
+            background: #2ecc71;
+        }
+        
+        .online-indicator.offline {
+            background: #95a5a6;
+        }
+        
+        .search-results {
+            max-height: 300px;
+            overflow-y: auto;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .chat-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chat-header {
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+            background: #f8f9fa;
+        }
+        
+        .chat-header h3 {
+            color: #333;
+            font-size: 20px;
+        }
+        
+        .messages-container {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #fafafa;
+        }
+        
+        .message {
+            margin-bottom: 15px;
+            display: flex;
+            position: relative;
+        }
+        
+        .message:hover .message-actions {
+            display: flex;
+        }
+        
+        .message.sent {
+            justify-content: flex-end;
+        }
+        
+        .message.received {
+            justify-content: flex-start;
+        }
+        
+        .message-bubble {
+            max-width: 60%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            word-wrap: break-word;
+        }
+        
+        .message.sent .message-bubble {
+            background: #667eea;
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+        
+        .message.received .message-bubble {
+            background: white;
+            color: #333;
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .message-time {
+            font-size: 11px;
+            opacity: 0.7;
+            margin-top: 5px;
+        }
+        
+        .edited-indicator {
+            font-size: 10px;
+            opacity: 0.6;
+            font-style: italic;
+            margin-left: 5px;
+        }
+        
+        .message-actions {
+            display: none;
+            position: absolute;
+            top: -10px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            padding: 5px;
+            gap: 5px;
+            z-index: 10;
+        }
+        
+        .message.sent .message-actions {
+            right: 0;
+        }
+        
+        .message.received .message-actions {
+            left: 0;
+        }
+        
+        .message-action-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 5px 10px;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        
+        .message-action-btn:hover {
+            background: #f0f0f0;
+        }
+        
+        .edit-message-form {
+            display: flex;
+            gap: 5px;
+            margin-top: 10px;
+        }
+        
+        .edit-message-input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 2px solid #667eea;
+            border-radius: 15px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+        
+        .edit-message-input:focus {
+            outline: none;
+        }
+        
+        .edit-message-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 12px;
+        }
+        
+        .edit-save-btn {
+            background: #667eea;
+            color: white;
+        }
+        
+        .edit-cancel-btn {
+            background: #e0e0e0;
+            color: #333;
+        }
+        
+        .delete-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .delete-modal.show {
+            display: flex;
+        }
+        
+        .delete-modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 400px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        
+        .delete-modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .delete-modal-text {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .delete-modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+        
+        .delete-modal-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .delete-for-me-btn {
+            background: #95a5a6;
+            color: white;
+        }
+        
+        .delete-for-everyone-btn {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .delete-cancel-btn {
+            background: #e0e0e0;
+            color: #333;
+        }
+        
+        .delete-modal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .file-attachment {
+            margin-top: 8px;
+        }
+        
+        .file-attachment img, .file-attachment video {
+            max-width: 300px;
+            max-height: 300px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        
+        .file-download {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: rgba(0,0,0,0.1);
+            border-radius: 8px;
+            text-decoration: none;
+            color: inherit;
+            margin-top: 5px;
+        }
+        
+        .file-download:hover {
+            background: rgba(0,0,0,0.2);
+        }
+        
+        .message.sent .file-download {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .message.sent .file-download:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .message-input-container {
+            padding: 20px;
+            border-top: 1px solid #e0e0e0;
+            background: white;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .message-input-container input[type="text"] {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 14px;
+        }
+        
+        .message-input-container input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .file-upload-btn {
+            padding: 12px;
+            background: #e0e0e0;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .file-upload-btn:hover {
+            background: #d0d0d0;
+        }
+        
+        .file-upload-input {
+            display: none;
+        }
+        
+        .file-preview {
+            position: absolute;
+            bottom: 70px;
+            left: 20px;
+            right: 20px;
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: none;
+        }
+        
+        .file-preview.show {
+            display: block;
+        }
+        
+        .recording-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #e74c3c;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        
+        .recording-pulse {
+            width: 12px;
+            height: 12px;
+            background: white;
+            border-radius: 50%;
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        
+        .recording-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .recording-controls button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        
+        .stop-recording {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .cancel-recording {
+            background: #95a5a6;
+            color: white;
+        }
+        
+        .file-preview-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .file-preview-content img {
+            max-width: 100px;
+            max-height: 100px;
+            border-radius: 5px;
+        }
+        
+        .file-preview-info {
+            flex: 1;
+        }
+        
+        .file-preview-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .file-preview-size {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .file-preview-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .cancel-file-btn {
+            padding: 8px 16px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .send-btn {
+            padding: 12px 24px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        
+        .send-btn:hover {
+            background: #5568d3;
+        }
+        
+        .empty-chat {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            color: #999;
+            font-size: 18px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        /* Admin Panel Styles */
+        .admin-panel {
+            display: none;
+            height: 100vh;
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        .admin-container {
+            display: flex;
+            height: 100%;
+            min-height: 0;
+        }
+        
+        .admin-sidebar {
+            width: 100%;
+            border-right: none;
+            display: flex;
+            flex-direction: column;
+            background: white;
+            flex: 1;
+            min-width: 0;
+            position: relative;
+        }
+        
+        .admin-header {
+            padding: 20px;
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .admin-header h3 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        
+        .admin-tabs {
+            display: flex;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .admin-tab {
+            flex: 1;
+            padding: 15px;
+            background: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s;
+        }
+        
+        .admin-tab.active {
+            color: #e74c3c;
+            border-bottom: 3px solid #e74c3c;
+        }
+        
+        .admin-content {
+            flex: 1;
+            min-height: 0;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 20px;
+            max-height: none;
+        }
+        
+        .admin-user-item {
+            padding: 15px;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .admin-user-info {
+            flex: 1;
+        }
+        
+        .admin-user-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .admin-user-status {
+            font-size: 12px;
+            color: #999;
+        }
+        
+        .admin-user-banned {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+        
+        .admin-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+        
+        .ban-btn {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .unban-btn {
+            background: #27ae60;
+            color: white;
+        }
+        
+        .view-chat-btn {
+            background: #667eea;
+            color: white;
+            margin-left: 5px;
+        }
+        
+        .admin-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .admin-conversation-item {
+            padding: 15px;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .admin-conversation-item:hover {
+            background: #f8f9fa;
+        }
+        
+        .admin-chat-view {
+            flex: 1;
+            display: none;
+            flex-direction: column;
+            background: #fafafa;
+            overflow: hidden;
+        }
+        
+        .admin-user-password {
+            font-size: 11px;
+            color: #666;
+            font-family: monospace;
+            margin-top: 3px;
+            word-break: break-all;
+        }
+        
+        .admin-password-warning {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 15px;
+            font-size: 12px;
+            color: #856404;
+        }
+        
+        .admin-real-password {
+            color: #d63031;
+            font-weight: 700;
+        }
+        
+        .admin-chat-full {
+            display: none;
+            flex-direction: column;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: white;
+            z-index: 100;
+            padding: 20px;
+            min-height: 0;
+        }
+        
+        .admin-chat-full.active {
+            display: flex;
+        }
+        
+        .admin-chat-full .messages-container {
+            flex: 1;
+            min-height: 0;
+            overflow-y: auto;
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        
+        .admin-chat-full .chat-header {
+            padding: 15px 0;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .admin-chat-full .chat-header h3 {
+            color: #333;
+            font-size: 20px;
+        }
+        
+        .admin-back-btn {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 14px;
+            display: inline-block;
+            width: auto;
+        }
+        
+        .admin-back-btn:hover {
+            background: #5568d3;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .mobile-back-btn {
+            display: none;
+            align-items: center;
+            gap: 6px;
+            background: #f0f0f0;
+            border: 1px solid #e0e0e0;
+            color: #333;
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        /* ===== MOBILE MENU TOGGLE ===== */
+        .menu-toggle-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px 10px;
+            margin-right: 10px;
+        }
+
+        .menu-toggle-btn:hover {
+            opacity: 0.8;
+        }
+
+        .sidebar.mobile-hidden .search-box,
+        .sidebar.mobile-hidden .conversations-list,
+        .sidebar.mobile-hidden .search-results {
+            display: none;
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+
+        /* Tablets and smaller screens (768px and below) */
+        @media (max-width: 768px) {
+            body {
+                padding: 0;
+            }
+
+            .menu-toggle-btn {
+                display: none !important;
+            }
+
+            .container {
+                max-width: 100%;
+                width: 100%;
+                height: 100vh;
+                border-radius: 0;
+                box-shadow: none;
+            }
+
+            body.chat-active .container {
+                max-width: 100%;
+                width: 100%;
+                height: 100vh;
+            }
+
+            .chat-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                max-height: 60px;
+                border-right: none;
+                border-bottom: 1px solid #e0e0e0;
+                flex-direction: row;
+                align-items: center;
+                justify-content: flex-start;
+                position: relative;
+                overflow: visible;
+            }
+
+            .sidebar.mobile-hidden .sidebar-header {
+                flex: 1;
+            }
+
+            .sidebar:not(.mobile-hidden) {
+                flex-direction: column;
+                max-height: 100%;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 200;
+                background: white;
+            }
+
+            .sidebar:not(.mobile-hidden) .sidebar-header {
+                width: 100%;
+                padding: 15px;
+                border-bottom: 1px solid #e0e0e0;
+            }
+
+            .sidebar-header {
+                padding: 10px 15px;
+                flex: 0 0 auto;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .sidebar-header h3 {
+                font-size: 16px;
+                margin-bottom: 0;
+                margin: 0;
+            }
+
+            .sidebar-header .username {
+                display: none;
+            }
+
+            .logout-btn {
+                margin-top: 0;
+                padding: 8px 12px;
+                font-size: 12px;
+                margin-left: auto;
+            }
+
+            .search-box {
+                width: 100%;
+                padding: 15px;
+                border-bottom: 1px solid #e0e0e0;
+            }
+
+            .conversations-list {
+                width: 100%;
+                flex: 1;
+                overflow-y: auto;
+            }
+
+            .chat-area {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .chat-main {
+                min-height: 0;
+            }
+
+            .messages-container {
+                max-height: none;
+                padding-top: 70px;
+                padding-bottom: calc(140px + env(safe-area-inset-bottom, 0px));
+            }
+
+            .message-input-container {
+                position: fixed;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 20;
+                background: white;
+                padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+                justify-content: flex-end;
+            }
+
+            .message-input {
+                font-size: 16px;
+                padding: 12px;
+            }
+
+            .message-input-container input[type="text"] {
+                font-size: 16px;
+            }
+
+            .file-upload-btn, .voice-record-btn, .send-btn {
+                padding: 10px;
+                font-size: 14px;
+            }
+
+            .chat-header h3 {
+                font-size: 18px;
+            }
+
+            .file-preview {
+                bottom: 120px;
+                left: 10px;
+                right: 10px;
+            }
+
+            .chat-header {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 30;
+            }
+
+            body.mobile-show-list .chat-main {
+                display: none;
+            }
+
+            body.mobile-show-list .sidebar {
+                max-height: none;
+                height: 100vh;
+                flex: 1;
+                flex-direction: column;
+                align-items: stretch;
+                justify-content: flex-start;
+                position: relative;
+                overflow: hidden;
+            }
+
+            body.mobile-show-list .sidebar .sidebar-header {
+                width: 100%;
+                padding: 15px;
+                border-bottom: 1px solid #e0e0e0;
+            }
+
+            body.mobile-show-list .sidebar .search-box,
+            body.mobile-show-list .sidebar .conversations-list,
+            body.mobile-show-list .sidebar .search-results {
+                display: block;
+            }
+
+            body:not(.mobile-show-list) .sidebar .search-box,
+            body:not(.mobile-show-list) .sidebar .conversations-list,
+            body:not(.mobile-show-list) .sidebar .search-results {
+                display: none;
+            }
+
+            /* Admin panel responsive */
+            .admin-panel {
+                height: 100vh;
+            }
+
+            .admin-header {
+                padding: 15px;
+            }
+
+            .admin-header h2 {
+                font-size: 20px;
+            }
+
+            .admin-tabs {
+                padding: 10px;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            .admin-tabs button {
+                padding: 10px 15px;
+                font-size: 14px;
+                flex: 1 1 48%;
+            }
+
+            .admin-content {
+                max-height: none;
+                overflow-y: auto;
+                padding: 12px;
+            }
+
+            .admin-user-item {
+                padding: 12px;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .admin-user-info {
+                width: 100%;
+            }
+
+            .admin-user-name {
+                font-size: 14px;
+            }
+
+            .admin-user-password {
+                font-size: 12px;
+            }
+
+            .admin-btn {
+                padding: 8px 12px;
+                font-size: 12px;
+                width: 100%;
+            }
+
+            .admin-chat-full {
+                padding: 12px;
+            }
+
+            /* Modal responsive */
+            .delete-modal-content {
+                max-width: 90%;
+            }
+        }
+
+        /* Mobile phones (480px and below) */
+        @media (max-width: 480px) {
+            .auth-page {
+                padding: 20px;
+            }
+
+            .auth-page h2 {
+                font-size: 24px;
+                margin-bottom: 20px;
+            }
+
+            .auth-form {
+                max-width: 100%;
+            }
+
+            .form-group input {
+                padding: 14px;
+                font-size: 16px;
+            }
+
+            .btn {
+                padding: 14px;
+                font-size: 16px;
+            }
+
+            .sidebar {
+                max-height: 50px;
+            }
+
+            .sidebar-header {
+                padding: 8px 10px;
+            }
+
+            .sidebar-header h3 {
+                font-size: 14px;
+            }
+
+            .logout-btn {
+                padding: 6px 10px;
+                font-size: 11px;
+            }
+
+            .messages-container {
+                max-height: none;
+                padding: 70px 5px calc(140px + env(safe-area-inset-bottom, 0px));
+            }
+
+            .message-bubble {
+                max-width: 90%;
+                padding: 10px;
+                margin: 8px 0;
+                font-size: 14px;
+            }
+
+            .message-time {
+                font-size: 11px;
+            }
+
+            .message-input {
+                font-size: 16px;
+                padding: 10px;
+            }
+
+            .message-input-container input[type="text"] {
+                font-size: 16px;
+            }
+
+            .message-input-container {
+                flex-wrap: nowrap;
+                gap: 6px;
+                align-items: center;
+            }
+
+            .send-btn, .file-upload-btn, .voice-record-btn {
+                padding: 8px;
+                font-size: 12px;
+                min-width: 35px;
+            }
+
+            .send-btn {
+                margin-left: auto;
+            }
+
+            .file-upload-btn, .voice-record-btn {
+                width: auto;
+            }
+
+            .chat-header {
+                padding: 12px;
+            }
+
+            .mobile-back-btn {
+                padding: 6px 8px;
+                font-size: 11px;
+            }
+
+            .chat-header h3 {
+                font-size: 16px;
+            }
+
+            .file-preview {
+                bottom: 100px;
+                left: 5px;
+                right: 5px;
+                padding: 10px;
+            }
+
+            .admin-user-password {
+                font-size: 11px;
+                word-break: break-all;
+            }
+
+            .delete-modal-content {
+                width: 95%;
+                max-width: 100%;
+            }
+
+            .admin-conversation-item {
+                padding: 10px;
+                font-size: 13px;
+            }
+
+            .admin-user-item {
+                padding: 10px;
+            }
+
+            .admin-btn {
+                padding: 8px 10px;
+                font-size: 11px;
+            }
+
+            .admin-password-warning {
+                font-size: 12px;
+                padding: 10px;
+                margin: 10px 5px;
+            }
+        }
+
+        /* Large screens (1024px and above) */
+        @media (min-width: 1024px) {
+            .sidebar {
+                width: 350px;
+            }
+
+            .chat-header {
+                padding: 20px 25px;
+            }
+
+            .messages-container {
+                padding: 25px;
+            }
+
+            .message-input-container {
+                padding: 20px 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Login/Signup Page -->
+        <div class="auth-page" id="authPage">
+            <h2 id="authTitle">Welcome to Chat</h2>
+            <form class="auth-form" id="authForm">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" required minlength="3">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required minlength="4">
+                </div>
+                <button type="submit" class="btn btn-primary" id="authSubmitBtn">Login</button>
+                <button type="button" class="btn btn-secondary" id="toggleAuthBtn">Don't have an account? Sign up</button>
+                <div id="authMessage"></div>
+            </form>
+        </div>
+
+        <!-- Chat Page -->
+        <div class="chat-page" id="chatPage">
+            <div class="chat-container">
+                <!-- Sidebar -->
+                <div class="sidebar" id="sidebar">
+                    <div class="sidebar-header">
+                        <button class="menu-toggle-btn" id="menuToggleBtn" style="display:none;">☰</button>
+                        <h3>Chat App</h3>
+                        <div class="username" id="currentUsername"></div>
+                        <button class="logout-btn" id="logoutBtn">Logout</button>
+                    </div>
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="Search users...">
+                    </div>
+                    <div class="search-results hidden" id="searchResults"></div>
+                    <div class="conversations-list" id="conversationsList"></div>
+                </div>
+
+                <!-- Chat Main -->
+                <div class="chat-main">
+                    <div class="chat-header hidden" id="chatHeader">
+                        <button class="mobile-back-btn" id="mobileBackBtn" type="button">← Users</button>
+                        <h3 id="chatUsername"></h3>
+                    </div>
+                    <div class="messages-container" id="messagesContainer">
+                        <div class="empty-chat">Select a conversation to start chatting</div>
+                    </div>
+                    <div class="file-preview" id="filePreview">
+                        <div class="file-preview-content" id="filePreviewContent"></div>
+                        <div class="file-preview-actions">
+                            <button class="cancel-file-btn" id="cancelFileBtn">Cancel</button>
+                        </div>
+                    </div>
+                    <div class="message-input-container hidden" id="messageInputContainer">
+                        <input type="file" id="fileUploadInput" class="file-upload-input">
+                        <button class="file-upload-btn" id="fileUploadBtn" title="Attach file">📎</button>
+                        <button class="file-upload-btn" id="voiceRecordBtn" title="Record voice message">🎤</button>
+                        <input type="text" id="messageInput" placeholder="Type a message...">
+                        <button class="send-btn" id="sendBtn">Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div class="admin-panel" id="adminPanel">
+        <div class="admin-container">
+            <div class="admin-sidebar">
+                <div class="admin-header">
+                    <h3>🛡️ Admin Panel</h3>
+                    <div class="username" id="adminUsername"></div>
+                    <button class="logout-btn" id="adminLogoutBtn">Logout</button>
+                </div>
+                <div class="admin-tabs">
+                    <button class="admin-tab active" id="usersTab">Users</button>
+                    <button class="admin-tab" id="chatsTab">All Chats</button>
+                </div>
+                <div class="admin-content" id="adminContent">
+                    <!-- Content will be loaded here -->
+                </div>
+                <div class="admin-chat-full" id="adminChatFull">
+                    <button class="admin-back-btn" id="adminBackBtn">← Back to List</button>
+                    <div class="chat-header">
+                        <h3 id="adminChatTitleFull"></h3>
+                    </div>
+                    <div class="messages-container" id="adminMessagesContainerFull">
+                        <div class="empty-chat">Loading messages...</div>
+                    </div>
+                </div>
+            </div>
+            <div class="admin-chat-view">
+                <div class="chat-header hidden" id="adminChatHeader">
+                    <h3 id="adminChatTitle"></h3>
+                </div>
+                <div class="messages-container" id="adminMessagesContainer">
+                    <div class="empty-chat">Select a conversation to view messages</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Modal -->
+    <div class="delete-modal" id="deleteModal">
+        <div class="delete-modal-content">
+            <div class="delete-modal-title">Delete Message</div>
+            <div class="delete-modal-text">Choose how you want to delete this message:</div>
+            <div class="delete-modal-actions">
+                <button class="delete-modal-btn delete-cancel-btn" id="deleteCancelBtn">Cancel</button>
+                <button class="delete-modal-btn delete-for-me-btn" id="deleteForMeBtn">Delete for me</button>
+                <button class="delete-modal-btn delete-for-everyone-btn" id="deleteForEveryoneBtn">Delete for everyone</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change Password Modal -->
+    <div class="delete-modal" id="changePasswordModal">
+        <div class="delete-modal-content">
+            <div class="delete-modal-title">Change Password</div>
+            <div class="delete-modal-text">
+                <div style="margin-bottom:10px;">Changing password for: <strong id="changePasswordUsername"></strong></div>
+                <input type="password" id="newPasswordInput" placeholder="Enter new password" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:5px;font-size:14px;">
+            </div>
+            <div class="delete-modal-actions">
+                <button class="delete-modal-btn delete-cancel-btn" id="changePasswordCancelBtn">Cancel</button>
+                <button class="delete-modal-btn delete-for-everyone-btn" id="changePasswordConfirmBtn">Change Password</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // IMPORTANT: Update this to your deployed backend URL
+        // Public ngrok: https://seducingly-circulatory-rema.ngrok-free.dev
+        // Local network: http://192.168.1.6:5000
+        const API_URL = 'https://seducingly-circulatory-rema.ngrok-free.dev';
+        // Force skip ngrok browser warning for API calls.
+        const originalFetch = window.fetch.bind(window);
+        window.fetch = (input, init = {}) => {
+            const headers = new Headers(init.headers || {});
+            headers.set('ngrok-skip-browser-warning', 'true');
+            return originalFetch(input, { ...init, headers });
+        };
+        
+        let currentUser = null;
+        let currentToken = null;
+        let currentChatUser = null;
+        let isLoginMode = true;
+        let messageRefreshInterval = null;
+        let heartbeatInterval = null;
+        let statusRefreshInterval = null;
+        let selectedFile = null;
+        let onlineStatuses = {};
+        let lastMessagesJSON = ''; // Cache to prevent unnecessary re-renders
+        let mediaRecorder = null;
+        let audioChunks = [];
+        let isRecording = false;
+        let currentDeleteMessageId = null;
+        let editingMessageId = null;
+        let isAdmin = false;
+        let currentAdminView = 'users';
+        let currentAdminChatUser1 = null;
+        let currentAdminChatUser2 = null;
+        let adminMessageRefreshInterval = null;
+
+        // DOM Elements
+        const authPage = document.getElementById('authPage');
+        const chatPage = document.getElementById('chatPage');
+        const adminPanel = document.getElementById('adminPanel');
+        const authForm = document.getElementById('authForm');
+        const authTitle = document.getElementById('authTitle');
+        const authSubmitBtn = document.getElementById('authSubmitBtn');
+        const toggleAuthBtn = document.getElementById('toggleAuthBtn');
+        const authMessage = document.getElementById('authMessage');
+        const currentUsernameEl = document.getElementById('currentUsername');
+        const searchInput = document.getElementById('searchInput');
+        const searchResults = document.getElementById('searchResults');
+        const conversationsList = document.getElementById('conversationsList');
+        const chatHeader = document.getElementById('chatHeader');
+        const chatUsername = document.getElementById('chatUsername');
+        const messagesContainer = document.getElementById('messagesContainer');
+        const messageInputContainer = document.getElementById('messageInputContainer');
+        const messageInput = document.getElementById('messageInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const fileUploadBtn = document.getElementById('fileUploadBtn');
+        const fileUploadInput = document.getElementById('fileUploadInput');
+        const filePreview = document.getElementById('filePreview');
+        const filePreviewContent = document.getElementById('filePreviewContent');
+        const cancelFileBtn = document.getElementById('cancelFileBtn');
+        const voiceRecordBtn = document.getElementById('voiceRecordBtn');
+        const deleteModal = document.getElementById('deleteModal');
+        const deleteCancelBtn = document.getElementById('deleteCancelBtn');
+        const deleteForMeBtn = document.getElementById('deleteForMeBtn');
+        const deleteForEveryoneBtn = document.getElementById('deleteForEveryoneBtn');
+        const adminUsername = document.getElementById('adminUsername');
+        const adminLogoutBtn = document.getElementById('adminLogoutBtn');
+        const usersTab = document.getElementById('usersTab');
+        const chatsTab = document.getElementById('chatsTab');
+        const adminContent = document.getElementById('adminContent');
+        const adminChatHeader = document.getElementById('adminChatHeader');
+        const adminChatTitle = document.getElementById('adminChatTitle');
+        const adminMessagesContainer = document.getElementById('adminMessagesContainer');
+        const sidebar = document.getElementById('sidebar');
+        const menuToggleBtn = document.getElementById('menuToggleBtn');
+        const mobileBackBtn = document.getElementById('mobileBackBtn');
+
+        function isMobileView() {
+            return window.innerWidth <= 768;
+        }
+
+        function setMobileListView(showList) {
+            document.body.classList.toggle('mobile-show-list', showList);
+            if (sidebar) {
+                sidebar.classList.toggle('mobile-hidden', isMobileView() && !showList);
+            }
+            if (mobileBackBtn) {
+                mobileBackBtn.style.display = isMobileView() && !showList ? 'inline-flex' : 'none';
+            }
+            if (menuToggleBtn) {
+                menuToggleBtn.style.display = 'none';
+            }
+        }
+
+        // Mobile menu toggle
+        function handleMobileMenu() {
+            if (isMobileView()) {
+                setMobileListView(!currentChatUser);
+            } else {
+                document.body.classList.remove('mobile-show-list');
+                if (sidebar) {
+                    sidebar.classList.remove('mobile-hidden');
+                }
+                if (mobileBackBtn) {
+                    mobileBackBtn.style.display = 'none';
+                }
+                if (menuToggleBtn) {
+                    menuToggleBtn.style.display = 'none';
+                }
+            }
+        }
+
+        // Toggle sidebar on mobile
+        if (menuToggleBtn) {
+            menuToggleBtn.addEventListener('click', () => {
+                if (!isMobileView()) {
+                    return;
+                }
+                setMobileListView(!document.body.classList.contains('mobile-show-list'));
+            });
+        }
+
+        if (mobileBackBtn) {
+            mobileBackBtn.addEventListener('click', () => {
+                if (isMobileView()) {
+                    setMobileListView(true);
+                }
+            });
+        }
+
+        // Handle window resize
+        window.addEventListener('resize', handleMobileMenu);
+        window.addEventListener('load', handleMobileMenu);
+
+        // Close sidebar when selecting a conversation on mobile
+        if (conversationsList) {
+            conversationsList.addEventListener('click', () => {
+                if (isMobileView()) {
+                    setMobileListView(false);
+                }
+            });
+        }
+
+        // Check for saved session on page load
+        window.addEventListener('load', () => {
+            console.log('Page loaded');
+            const savedUser = localStorage.getItem('chatUser');
+            const savedToken = localStorage.getItem('chatToken');
+            const savedIsAdmin = localStorage.getItem('isAdmin') === 'true';
+            
+            if (savedUser && savedToken) {
+                console.log('Found saved session:', savedUser);
+                currentUser = savedUser;
+                currentToken = savedToken;
+                isAdmin = savedIsAdmin;
+                
+                if (isAdmin) {
+                    showAdminPanel();
+                } else {
+                    showChatPage();
+                }
+            } else {
+                console.log('No saved session found');
+            }
+        });
+
+        // Toggle between login and signup
+        toggleAuthBtn.addEventListener('click', () => {
+            isLoginMode = !isLoginMode;
+            if (isLoginMode) {
+                authTitle.textContent = 'Welcome to Chat';
+                authSubmitBtn.textContent = 'Login';
+                toggleAuthBtn.textContent = "Don't have an account? Sign up";
+            } else {
+                authTitle.textContent = 'Create Account';
+                authSubmitBtn.textContent = 'Sign Up';
+                toggleAuthBtn.textContent = 'Already have an account? Login';
+            }
+            authMessage.innerHTML = '';
+        });
+
+        // Auth form submission
+        console.log('Attaching form submit listener');
+        authForm.addEventListener('submit', async (e) => {
+            console.log('Form submitted!');
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            console.log('Attempting', isLoginMode ? 'login' : 'signup', 'for user:', username);
+
+            try {
+                const endpoint = isLoginMode ? '/login' : '/signup';
+                console.log('Calling API:', `${API_URL}${endpoint}`);
+                const res = await fetch(`${API_URL}${endpoint}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await res.json();
+                console.log('API Response:', res.status, data);
+
+                if (!res.ok) {
+                    console.error('Auth failed:', data.detail);
+                    authMessage.innerHTML = `<div class="error-message">${data.detail}</div>`;
+                    return;
+                }
+
+                // Success
+                console.log('Auth success!');
+                currentUser = data.username;
+                currentToken = data.token;
+                isAdmin = data.is_admin || false;
+                
+                // Save session to localStorage
+                localStorage.setItem('chatUser', currentUser);
+                localStorage.setItem('chatToken', currentToken);
+                localStorage.setItem('isAdmin', isAdmin.toString());
+                
+                authMessage.innerHTML = `<div class="success-message">${data.message}</div>`;
+                
+                setTimeout(() => {
+                    if (isAdmin) {
+                        showAdminPanel();
+                    } else {
+                        showChatPage();
+                    }
+                }, 500);
+
+            } catch (err) {
+                authMessage.innerHTML = `<div class="error-message">Connection error. Make sure the server is running.</div>`;
+                console.error(err);
+            }
+        });
+
+        // Show chat page
+        function showChatPage() {
+            authPage.style.display = 'none';
+            chatPage.style.display = 'block';
+            document.body.classList.add('chat-active');
+            currentUsernameEl.textContent = `@${currentUser}`;
+            loadConversations();
+            startHeartbeat();
+            startStatusRefresh();
+            handleMobileMenu();
+        }
+        
+        // Start heartbeat to keep user online
+        function startHeartbeat() {
+            if (heartbeatInterval) clearInterval(heartbeatInterval);
+            
+            // Send heartbeat every 10 seconds to detect ban in real-time
+            heartbeatInterval = setInterval(async () => {
+                try {
+                    const res = await fetch(`${API_URL}/heartbeat/${currentUser}`, { method: 'POST' });
+                    
+                    if (res.status === 403) {
+                        // User is banned!
+                        console.warn('User banned detected!');
+                        alert('Your account has been banned by an administrator.');
+                        forceLogout();
+                        return;
+                    }
+                    
+                    if (!res.ok) {
+                        console.error('Heartbeat error:', res.status);
+                    }
+                } catch (err) {
+                    console.error('Heartbeat error:', err);
+                }
+            }, 10000);
+            
+            // Send initial heartbeat
+            try {
+                fetch(`${API_URL}/heartbeat/${currentUser}`, { method: 'POST' });
+            } catch (err) {
+                console.error('Initial heartbeat error:', err);
+            }
+        }
+        
+        // Force logout when user is banned
+        function forceLogout() {
+            // Send logout request to backend
+            try {
+                fetch(`${API_URL}/logout/${currentUser}`, { method: 'POST' });
+            } catch (err) {
+                console.error('Logout error:', err);
+            }
+            
+            // Clear session
+            localStorage.removeItem('chatUser');
+            localStorage.removeItem('chatToken');
+            localStorage.removeItem('isAdmin');
+            
+            // Clear all intervals
+            if (messageRefreshInterval) clearInterval(messageRefreshInterval);
+            if (heartbeatInterval) clearInterval(heartbeatInterval);
+            if (statusRefreshInterval) clearInterval(statusRefreshInterval);
+            if (adminMessageRefreshInterval) clearInterval(adminMessageRefreshInterval);
+            
+            currentUser = null;
+            currentToken = null;
+            currentChatUser = null;
+            isAdmin = false;
+            
+            // Remove full screen class
+            document.body.classList.remove('chat-active');
+            document.body.classList.remove('mobile-show-list');
+            
+            // Show auth page
+            authPage.style.display = 'flex';
+            chatPage.style.display = 'none';
+            adminPanel.style.display = 'none';
+            authForm.reset();
+            authMessage.innerHTML = '<div class="error-message">Your account has been banned. Please contact an administrator.</div>';
+        }
+        
+        // Refresh online statuses
+        function startStatusRefresh() {
+            if (statusRefreshInterval) clearInterval(statusRefreshInterval);
+            
+            statusRefreshInterval = setInterval(async () => {
+                try {
+                    const res = await fetch(`${API_URL}/all_online_status`);
+                    onlineStatuses = await res.json();
+                    updateOnlineIndicators();
+                    
+                    // Update chat header if chatting with someone
+                    if (currentChatUser) {
+                        const isOnline = onlineStatuses[currentChatUser]?.status === 'online';
+                        chatUsername.innerHTML = `@${currentChatUser} <span style="font-size:14px;color:${isOnline ? '#2ecc71' : '#95a5a6'};margin-left:10px;">${isOnline ? '● Online' : 'Offline'}</span>`;
+                    }
+                } catch (err) {
+                    console.error('Status refresh error:', err);
+                }
+            }, 5000);
+            
+            // Initial status fetch
+            fetch(`${API_URL}/all_online_status`)
+                .then(res => res.json())
+                .then(data => {
+                    onlineStatuses = data;
+                    updateOnlineIndicators();
+                });
+        }
+        
+        // Update online indicators in UI
+        function updateOnlineIndicators() {
+            document.querySelectorAll('.online-indicator').forEach(indicator => {
+                const username = indicator.dataset.username;
+                const isOnline = onlineStatuses[username]?.status === 'online';
+                
+                if (isOnline) {
+                    indicator.classList.add('online');
+                    indicator.classList.remove('offline');
+                } else {
+                    indicator.classList.add('offline');
+                    indicator.classList.remove('online');
+                }
+                
+                // Update text label if it exists
+                const textLabel = indicator.nextElementSibling;
+                if (textLabel && textLabel.tagName === 'SPAN') {
+                    textLabel.textContent = `(${isOnline ? 'Online' : 'Offline'})`;
+                }
+            });
+        }
+
+        // Logout
+        logoutBtn.addEventListener('click', async () => {
+            // Send logout request to backend
+            try {
+                await fetch(`${API_URL}/logout/${currentUser}`, { method: 'POST' });
+            } catch (err) {
+                console.error('Logout error:', err);
+            }
+            
+            // Clear session
+            localStorage.removeItem('chatUser');
+            localStorage.removeItem('chatToken');
+            
+            currentUser = null;
+            currentToken = null;
+            currentChatUser = null;
+            
+            if (messageRefreshInterval) clearInterval(messageRefreshInterval);
+            if (heartbeatInterval) clearInterval(heartbeatInterval);
+            if (statusRefreshInterval) clearInterval(statusRefreshInterval);
+            
+            // Remove full screen class
+            document.body.classList.remove('chat-active');
+            document.body.classList.remove('mobile-show-list');
+            
+            authPage.style.display = 'flex';
+            chatPage.style.display = 'none';
+            authForm.reset();
+            authMessage.innerHTML = '';
+        });
+
+        // Admin Panel Functions
+        function showAdminPanel() {
+            authPage.style.display = 'none';
+            chatPage.style.display = 'none';
+            adminPanel.style.display = 'block';
+            document.body.classList.add('chat-active');
+            adminUsername.textContent = `@${currentUser} (Admin)`;
+            loadAdminUsers();
+        }
+
+        async function loadAdminUsers() {
+            try {
+                const res = await fetch(`${API_URL}/admin/all_users`);
+                const data = await res.json();
+                
+                adminContent.innerHTML = '';
+                
+                // Add security warning
+                const warning = document.createElement('div');
+                warning.className = 'admin-password-warning';
+                warning.innerHTML = '⚠️ <strong>Security Warning:</strong> Passwords are stored in plain text for admin access. This is highly insecure and not recommended for production use!';
+                adminContent.appendChild(warning);
+                
+                data.users.forEach(user => {
+                    const div = document.createElement('div');
+                    div.className = 'admin-user-item';
+                    
+                    const statusText = user.is_banned ? 
+                        '<span class="admin-user-status admin-user-banned">⛔ BANNED</span>' : 
+                        '<span class="admin-user-status">✅ Active</span>';
+                    
+                    div.innerHTML = `
+                        <div class="admin-user-info">
+                            <div class="admin-user-name">@${user.username}</div>
+                            ${statusText}
+                            <div class="admin-user-password"><span class="admin-real-password">🔑 Password: ${user.password}</span></div>
+                            <div class="admin-user-password" title="${user.password_hash}">🔒 Hash: ${user.password_hash}</div>
+                        </div>
+                        <div style="display:flex;gap:10px;">
+                            <button class="admin-btn change-pwd-btn" style="background:#3498db;">Change Password</button>
+                            ${user.is_banned ? 
+                                `<button class="admin-btn unban-user-btn">Unban</button>` :
+                                `<button class="admin-btn ban-user-btn">Ban</button>`
+                            }
+                        </div>
+                    `;
+                    
+                    adminContent.appendChild(div);
+                    
+                    // Add event listeners instead of onclick attributes
+                    const changePwdBtn = div.querySelector('.change-pwd-btn');
+                    const banBtn = div.querySelector('.ban-user-btn');
+                    const unbanBtn = div.querySelector('.unban-user-btn');
+                    
+                    console.log('Button elements:', { changePwdBtn, banBtn, unbanBtn });
+                    
+                    if (changePwdBtn) {
+                        changePwdBtn.addEventListener('click', () => {
+                            console.log('Change password clicked for:', user.username);
+                            showChangePasswordModal(user.username);
+                        });
+                    }
+                    
+                    if (banBtn) {
+                        banBtn.addEventListener('click', () => {
+                            console.log('Ban button clicked for:', user.username);
+                            banUser(user.username);
+                        });
+                    }
+                    
+                    if (unbanBtn) {
+                        unbanBtn.addEventListener('click', () => {
+                            console.log('Unban button clicked for:', user.username);
+                            unbanUser(user.username);
+                        });
+                    }
+                });
+            } catch (err) {
+                console.error('Load admin users error:', err);
+            }
+        }
+
+        async function loadAdminConversations() {
+            try {
+                const res = await fetch(`${API_URL}/admin/all_conversations`);
+                const data = await res.json();
+                
+                adminContent.innerHTML = '';
+                
+                if (data.conversations.length === 0) {
+                    adminContent.innerHTML = '<div style="padding:20px;color:#999;text-align:center;">No conversations found</div>';
+                    return;
+                }
+                
+                data.conversations.forEach(conv => {
+                    const div = document.createElement('div');
+                    div.className = 'admin-conversation-item';
+                    div.onclick = () => viewAdminChat(conv.users[0], conv.users[1]);
+                    
+                    div.innerHTML = `
+                        <div style="font-weight:600;margin-bottom:5px;">
+                            @${conv.users[0]} ↔ @${conv.users[1]}
+                        </div>
+                        <div style="font-size:12px;color:#999;">
+                            ${conv.message_count} messages
+                        </div>
+                    `;
+                    
+                    adminContent.appendChild(div);
+                });
+            } catch (err) {
+                console.error('Load admin conversations error:', err);
+            }
+        }
+
+        async function viewAdminChat(user1, user2) {
+            try {
+                // Store current chat users
+                currentAdminChatUser1 = user1;
+                currentAdminChatUser2 = user2;
+                
+                // Hide regular content, show chat in full screen on left
+                const adminContentDiv = document.getElementById('adminContent');
+                const adminChatFull = document.getElementById('adminChatFull');
+                const adminChatTitleFull = document.getElementById('adminChatTitleFull');
+                
+                // Hide header and tabs for full screen chat
+                document.querySelector('.admin-header').style.display = 'none';
+                document.querySelector('.admin-tabs').style.display = 'none';
+                adminContentDiv.style.display = 'none';
+                adminChatFull.classList.add('active');
+                
+                adminChatTitleFull.textContent = `@${user1} ↔ @${user2}`;
+                
+                // Load messages
+                await loadAdminMessages();
+                
+                // Start auto-refresh
+                if (adminMessageRefreshInterval) {
+                    clearInterval(adminMessageRefreshInterval);
+                }
+                adminMessageRefreshInterval = setInterval(loadAdminMessages, 2000);
+                
+            } catch (err) {
+                console.error('View admin chat error:', err);
+            }
+        }
+        
+        async function loadAdminMessages() {
+            if (!currentAdminChatUser1 || !currentAdminChatUser2) return;
+            
+            try {
+                const res = await fetch(`${API_URL}/admin/messages/${currentAdminChatUser1}/${currentAdminChatUser2}`);
+                const data = await res.json();
+                
+                const adminMessagesContainerFull = document.getElementById('adminMessagesContainerFull');
+                
+                // Save scroll position
+                const wasAtBottom = adminMessagesContainerFull.scrollHeight - adminMessagesContainerFull.scrollTop <= adminMessagesContainerFull.clientHeight + 100;
+                
+                adminMessagesContainerFull.innerHTML = '';
+                
+                if (data.messages.length === 0) {
+                    adminMessagesContainerFull.innerHTML = '<div class="empty-chat">No messages yet. Start the conversation!</div>';
+                    return;
+                }
+                
+                data.messages.forEach(msg => {
+                    const div = document.createElement('div');
+                    const isSentByCurrentUser = msg.from === currentUser;
+                    div.className = `message ${msg.from === currentAdminChatUser1 ? 'sent' : 'received'}`;
+                    div.setAttribute('data-message-id', msg.id);
+                    
+                    const time = new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    const editedIndicator = msg.edited ? '<span class="edited-indicator">edited</span>' : '';
+                    
+                    let fileContent = '';
+                    if (msg.file_url) {
+                        if (msg.file_type === 'image') {
+                            fileContent = `
+                                <div class="file-attachment">
+                                    <img src="${API_URL}${msg.file_url}" alt="${msg.file_name}" onclick="window.open('${API_URL}${msg.file_url}', '_blank')">
+                                </div>
+                            `;
+                        } else if (msg.file_type === 'video') {
+                            fileContent = `
+                                <div class="file-attachment">
+                                    <video controls style="max-width:300px;max-height:300px;border-radius:8px;">
+                                        <source src="${API_URL}${msg.file_url}" type="video/mp4">
+                                        Your browser does not support video playback.
+                                    </video>
+                                </div>
+                            `;
+                        } else {
+                            let fileIcon = '📁';
+                            const fileName = msg.file_name.toLowerCase();
+                            
+                            if (fileName.endsWith('.pdf')) {
+                                fileIcon = '📄';
+                            } else if (fileName.endsWith('.zip') || fileName.endsWith('.rar') || fileName.endsWith('.7z')) {
+                                fileIcon = '🗜️';
+                            } else if (fileName.endsWith('.doc') || fileName.endsWith('.docx')) {
+                                fileIcon = '📝';
+                            } else if (fileName.endsWith('.xls') || fileName.endsWith('.xlsx')) {
+                                fileIcon = '📊';
+                            } else if (fileName.endsWith('.mp3') || fileName.endsWith('.wav') || fileName.endsWith('.ogg') || fileName.endsWith('.webm') || fileName.endsWith('.m4a')) {
+                                fileContent = `
+                                    <div class="file-attachment">
+                                        <div style="display:flex;align-items:center;gap:8px;padding:8px;background:rgba(0,0,0,0.05);border-radius:8px;">
+                                            <span style="font-size:20px;">🎵</span>
+                                            <audio controls style="max-width:250px;height:32px;">
+                                                <source src="${API_URL}${msg.file_url}" type="audio/webm">
+                                                <source src="${API_URL}${msg.file_url}" type="audio/mpeg">
+                                                Your browser does not support audio playback.
+                                            </audio>
+                                        </div>
+                                    </div>
+                                `;
+                            }
+                            
+                            if (!fileContent) {
+                                fileContent = `
+                                    <div class="file-attachment">
+                                        <a href="${API_URL}${msg.file_url}" download="${msg.file_name}" class="file-download">
+                                            ${fileIcon} ${msg.file_name}
+                                        </a>
+                                    </div>
+                                `;
+                            }
+                        }
+                    }
+                    
+                    // Admin can only view messages, no editing or deleting
+                    div.innerHTML = `
+                        <div class="message-bubble">
+                            <div><strong>@${msg.from}</strong></div>
+                            <div>${msg.message ? msg.message : ''}</div>
+                            ${fileContent}
+                            <div class="message-time">${time}${editedIndicator}</div>
+                        </div>
+                    `;
+                    
+                    adminMessagesContainerFull.appendChild(div);
+                });
+                
+                // Scroll to bottom only if user was already at bottom
+                if (wasAtBottom) {
+                    adminMessagesContainerFull.scrollTop = adminMessagesContainerFull.scrollHeight;
+                }
+            } catch (err) {
+                console.error('Load admin messages error:', err);
+            }
+        }
+
+        async function banUser(username) {
+            console.log('=== BAN USER CALLED ===', { username, API_URL });
+            if (!confirm(`Are you sure you want to ban @${username}?`)) return;
+            
+            try {
+                const url = `${API_URL}/admin/ban_user`;
+                console.log('Fetching:', url);
+                const res = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username })
+                });
+                
+                console.log('Response status:', res.status, res.ok);
+                const data = await res.json();
+                console.log('Response data:', data);
+                
+                if (res.ok) {
+                    alert(`User @${username} has been banned`);
+                    loadAdminUsers();
+                } else {
+                    alert('Error: ' + (data.detail || JSON.stringify(data) || 'Failed to ban user'));
+                    console.error('Ban error:', data);
+                }
+            } catch (err) {
+                alert('Connection error: ' + err.message);
+                console.error('Ban user error:', err);
+            }
+        }
+
+        async function unbanUser(username) {
+            console.log('=== UNBAN USER CALLED ===', { username, API_URL });
+            try {
+                const url = `${API_URL}/admin/unban_user`;
+                console.log('Fetching:', url);
+                const res = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username })
+                });
+                
+                console.log('Response status:', res.status, res.ok);
+                const data = await res.json();
+                console.log('Response data:', data);
+                
+                if (res.ok) {
+                    alert(`User @${username} has been unbanned`);
+                    loadAdminUsers();
+                } else {
+                    alert('Error: ' + (data.detail || JSON.stringify(data) || 'Failed to unban user'));
+                    console.error('Unban error:', data);
+                }
+            } catch (err) {
+                alert('Connection error: ' + err.message);
+                console.error('Unban user error:', err);
+            }
+        }
+
+        // Make admin functions globally accessible
+        window.banUser = banUser;
+        window.unbanUser = unbanUser;
+        window.viewAdminChat = viewAdminChat;
+        
+        // Change password modal
+        const changePasswordModal = document.getElementById('changePasswordModal');
+        const changePasswordUsernameEl = document.getElementById('changePasswordUsername');
+        const newPasswordInput = document.getElementById('newPasswordInput');
+        const changePasswordCancelBtn = document.getElementById('changePasswordCancelBtn');
+        const changePasswordConfirmBtn = document.getElementById('changePasswordConfirmBtn');
+        let currentChangePasswordUser = null;
+        
+        function showChangePasswordModal(username) {
+            currentChangePasswordUser = username;
+            changePasswordUsernameEl.textContent = username;
+            newPasswordInput.value = '';
+            newPasswordInput.focus();
+            changePasswordModal.classList.add('show');
+        }
+        
+        changePasswordCancelBtn.addEventListener('click', () => {
+            changePasswordModal.classList.remove('show');
+            currentChangePasswordUser = null;
+            newPasswordInput.value = '';
+        });
+        
+        changePasswordConfirmBtn.addEventListener('click', async () => {
+            const newPassword = newPasswordInput.value.trim();
+            const username = (currentChangePasswordUser || '').trim();
+            
+            if (!username) {
+                alert('Error: Username not set. Please try again.');
+                return;
+            }
+            
+            if (!newPassword) {
+                alert('Password cannot be empty');
+                return;
+            }
+            
+            if (newPassword.length < 4) {
+                alert('Password must be at least 4 characters');
+                return;
+            }
+            
+            try {
+                console.log('Changing password for:', username);
+                const res = await fetch(`${API_URL}/admin/change_password`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        username: username,
+                        new_password: newPassword
+                    })
+                });
+                
+                const data = await res.json();
+                console.log('Change password response:', res.status, data);
+                
+                if (res.ok) {
+                    alert(`Password for ${username} has been changed successfully!`);
+                    changePasswordModal.classList.remove('show');
+                    currentChangePasswordUser = null;
+                    newPasswordInput.value = '';
+                    loadAdminUsers();
+                } else {
+                    const errorMsg = data.detail || JSON.stringify(data) || 'Failed to change password';
+                    alert('Error: ' + errorMsg);
+                    console.error('Change password error:', data);
+                }
+            } catch (err) {
+                alert('Connection error: ' + err.message);
+                console.error('Change password error:', err);
+            }
+        });
+        
+        window.showChangePasswordModal = showChangePasswordModal;
+
+        // Admin back button
+        const adminBackBtn = document.getElementById('adminBackBtn');
+        adminBackBtn.addEventListener('click', () => {
+            const adminContentDiv = document.getElementById('adminContent');
+            const adminChatFull = document.getElementById('adminChatFull');
+            
+            // Clear intervals and reset variables
+            if (adminMessageRefreshInterval) {
+                clearInterval(adminMessageRefreshInterval);
+                adminMessageRefreshInterval = null;
+            }
+            currentAdminChatUser1 = null;
+            currentAdminChatUser2 = null;
+            
+            // Restore header and tabs
+            document.querySelector('.admin-header').style.display = 'block';
+            document.querySelector('.admin-tabs').style.display = 'flex';
+            
+            adminChatFull.classList.remove('active');
+            adminContentDiv.style.display = 'block';
+            
+            // Reload current view
+            if (currentAdminView === 'users') {
+                loadAdminUsers();
+            } else {
+                loadAdminConversations();
+            }
+        });
+        
+        // Admin tabs
+        usersTab.addEventListener('click', () => {
+            usersTab.classList.add('active');
+            chatsTab.classList.remove('active');
+            currentAdminView = 'users';
+            
+            // Reset view and show header/tabs
+            document.querySelector('.admin-header').style.display = 'block';
+            document.querySelector('.admin-tabs').style.display = 'flex';
+            document.getElementById('adminContent').style.display = 'block';
+            document.getElementById('adminChatFull').classList.remove('active');
+            
+            loadAdminUsers();
+        });
+
+        chatsTab.addEventListener('click', () => {
+            chatsTab.classList.add('active');
+            usersTab.classList.remove('active');
+            currentAdminView = 'chats';
+            
+            // Reset view and show header/tabs
+            document.querySelector('.admin-header').style.display = 'block';
+            document.querySelector('.admin-tabs').style.display = 'flex';
+            document.getElementById('adminContent').style.display = 'block';
+            document.getElementById('adminChatFull').classList.remove('active');
+            
+            loadAdminConversations();
+        });
+
+        // Admin logout
+        adminLogoutBtn.addEventListener('click', async () => {
+            localStorage.removeItem('chatUser');
+            localStorage.removeItem('chatToken');
+            localStorage.removeItem('isAdmin');
+            
+            currentUser = null;
+            currentToken = null;
+            isAdmin = false;
+            
+            // Remove full screen class
+            document.body.classList.remove('chat-active');
+            
+            authPage.style.display = 'flex';
+            adminPanel.style.display = 'none';
+            authForm.reset();
+            authMessage.innerHTML = '';
+        });
+
+        // Logout (regular user)
+        logoutBtn.addEventListener('click', async () => {
+            // Send logout request to backend
+            try {
+                await fetch(`${API_URL}/logout/${currentUser}`, { method: 'POST' });
+            } catch (err) {
+                console.error('Logout error:', err);
+            }
+            
+            // Clear session
+            localStorage.removeItem('chatUser');
+            localStorage.removeItem('chatToken');
+            localStorage.removeItem('isAdmin');
+            
+            currentUser = null;
+            currentToken = null;
+            currentChatUser = null;
+            
+            if (messageRefreshInterval) clearInterval(messageRefreshInterval);
+            if (heartbeatInterval) clearInterval(heartbeatInterval);
+            if (statusRefreshInterval) clearInterval(statusRefreshInterval);
+            
+            // Remove full screen class
+            document.body.classList.remove('chat-active');
+            
+            authPage.style.display = 'flex';
+            chatPage.style.display = 'none';
+            authForm.reset();
+            authMessage.innerHTML = '';
+        });
+
+        // Search users
+        let searchTimeout;
+        searchInput.addEventListener('input', (e) => {
+            clearTimeout(searchTimeout);
+            const query = e.target.value.trim();
+            
+            if (query.length < 2) {
+                searchResults.classList.add('hidden');
+                return;
+            }
+
+            searchTimeout = setTimeout(async () => {
+                try {
+                    const res = await fetch(`${API_URL}/search_users/${encodeURIComponent(query)}`);
+                    const data = await res.json();
+                    
+                    displaySearchResults(data.users);
+                } catch (err) {
+                    console.error('Search error:', err);
+                }
+            }, 300);
+        });
+
+        // Display search results
+        function displaySearchResults(users) {
+            searchResults.innerHTML = '';
+            
+            if (users.length === 0) {
+                searchResults.innerHTML = '<div style="padding:15px;color:#999;">No users found</div>';
+                searchResults.classList.remove('hidden');
+                return;
+            }
+
+            users.forEach(username => {
+                if (username === currentUser) return; // Don't show yourself
+                
+                const div = document.createElement('div');
+                div.className = 'search-result-item';
+                // Check if user is online - default to offline if not in status list
+                const isOnline = onlineStatuses[username]?.status === 'online';
+                div.innerHTML = `
+                    <div class="conversation-name">
+                        @${username}
+                        <span class="online-indicator ${isOnline ? 'online' : 'offline'}" data-username="${username}"></span>
+                        <span style="font-size:11px;color:#999;margin-left:5px;">(${isOnline ? 'Online' : 'Offline'})</span>
+                    </div>
+                `;
+                div.addEventListener('click', () => {
+                    openChat(username);
+                    searchInput.value = '';
+                    searchResults.classList.add('hidden');
+                });
+                searchResults.appendChild(div);
+            });
+
+            searchResults.classList.remove('hidden');
+        }
+
+        // Load conversations
+        async function loadConversations() {
+            try {
+                const res = await fetch(`${API_URL}/get_conversations/${currentUser}`);
+                const data = await res.json();
+                
+                conversationsList.innerHTML = '';
+                
+                if (data.conversations.length === 0) {
+                    conversationsList.innerHTML = '<div style="padding:15px;color:#999;text-align:center;">No conversations yet.<br>Search for users to start chatting!</div>';
+                    return;
+                }
+
+                data.conversations.forEach(username => {
+                    const div = document.createElement('div');
+                    div.className = 'conversation-item';
+                    if (username === currentChatUser) {
+                        div.classList.add('active');
+                    }
+                    // Check if user is online - default to offline if not in status list
+                    const isOnline = onlineStatuses[username]?.status === 'online';
+                    div.innerHTML = `
+                        <div class="conversation-name">
+                            @${username}
+                            <span class="online-indicator ${isOnline ? 'online' : 'offline'}" data-username="${username}"></span>
+                            <span style="font-size:11px;color:#999;margin-left:5px;">(${isOnline ? 'Online' : 'Offline'})</span>
+                        </div>
+                    `;
+                    div.addEventListener('click', () => openChat(username));
+                    conversationsList.appendChild(div);
+                });
+            } catch (err) {
+                console.error('Load conversations error:', err);
+            }
+        }
+
+        // Open chat with user
+        function openChat(username) {
+            currentChatUser = username;
+            lastMessagesJSON = ''; // Reset cache when opening new chat
+            const isOnline = onlineStatuses[username]?.status === 'online';
+            chatUsername.innerHTML = `@${username} <span style="font-size:14px;color:${isOnline ? '#2ecc71' : '#95a5a6'};margin-left:10px;">${isOnline ? '● Online' : '● Offline'}</span>`;
+            chatHeader.classList.remove('hidden');
+            messageInputContainer.classList.remove('hidden');
+            if (isMobileView()) {
+                setMobileListView(false);
+            }
+            
+            // Update active conversation
+            document.querySelectorAll('.conversation-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.textContent.includes(username)) {
+                    item.classList.add('active');
+                }
+            });
+
+            loadMessages();
+            
+            // Refresh messages every 2 seconds
+            if (messageRefreshInterval) {
+                clearInterval(messageRefreshInterval);
+            }
+            messageRefreshInterval = setInterval(loadMessages, 2000);
+        }
+
+        // Load messages
+        async function loadMessages() {
+            if (!currentChatUser) return;
+
+            try {
+                const res = await fetch(`${API_URL}/get_messages/${currentUser}/${currentChatUser}`);
+                const data = await res.json();
+                
+                displayMessages(data.messages);
+            } catch (err) {
+                console.error('Load messages error:', err);
+            }
+        }
+
+        // Display messages
+        function displayMessages(messages) {
+            // Check if messages have changed to avoid unnecessary re-renders
+            const messagesJSON = JSON.stringify(messages);
+            if (messagesJSON === lastMessagesJSON) {
+                return; // No changes, skip re-render to prevent video restarts
+            }
+            lastMessagesJSON = messagesJSON;
+            
+            // Save scroll position
+            const wasAtBottom = messagesContainer.scrollHeight - messagesContainer.scrollTop <= messagesContainer.clientHeight + 100;
+            
+            messagesContainer.innerHTML = '';
+            
+            if (messages.length === 0) {
+                messagesContainer.innerHTML = '<div class="empty-chat">No messages yet. Start the conversation!</div>';
+                return;
+            }
+
+            messages.forEach(msg => {
+                const div = document.createElement('div');
+                const isSent = msg.from === currentUser;
+                div.className = `message ${isSent ? 'sent' : 'received'}`;
+                div.setAttribute('data-message-id', msg.id);
+                
+                const time = new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                
+                let fileContent = '';
+                if (msg.file_url) {
+                    if (msg.file_type === 'image') {
+                        fileContent = `
+                            <div class="file-attachment">
+                                <img src="${API_URL}${msg.file_url}" alt="${msg.file_name}" onclick="window.open('${API_URL}${msg.file_url}', '_blank')">
+                            </div>
+                        `;
+                    } else if (msg.file_type === 'video') {
+                        fileContent = `
+                            <div class="file-attachment">
+                                <video controls style="max-width:300px;max-height:300px;border-radius:8px;">
+                                    <source src="${API_URL}${msg.file_url}" type="video/mp4">
+                                    Your browser does not support video playback.
+                                </video>
+                            </div>
+                        `;
+                    } else {
+                        // Get appropriate icon based on file name
+                        let fileIcon = '📁';
+                        const fileName = msg.file_name.toLowerCase();
+                        
+                        if (fileName.endsWith('.pdf')) {
+                            fileIcon = '📄';
+                        } else if (fileName.endsWith('.zip') || fileName.endsWith('.rar') || fileName.endsWith('.7z')) {
+                            fileIcon = '🗜️';
+                        } else if (fileName.endsWith('.doc') || fileName.endsWith('.docx')) {
+                            fileIcon = '📝';
+                        } else if (fileName.endsWith('.xls') || fileName.endsWith('.xlsx')) {
+                            fileIcon = '📊';
+                        } else if (fileName.endsWith('.ppt') || fileName.endsWith('.pptx')) {
+                            fileIcon = '📊';
+                        } else if (fileName.endsWith('.txt')) {
+                            fileIcon = '📃';
+                        } else if (fileName.endsWith('.mp3') || fileName.endsWith('.wav') || fileName.endsWith('.ogg') || fileName.endsWith('.webm') || fileName.endsWith('.m4a')) {
+                            // Voice/Audio message
+                            fileContent = `
+                                <div class="file-attachment">
+                                    <div style="display:flex;align-items:center;gap:8px;padding:8px;background:rgba(0,0,0,0.05);border-radius:8px;">
+                                        <span style="font-size:20px;">🎵</span>
+                                        <audio controls style="max-width:250px;height:32px;">
+                                            <source src="${API_URL}${msg.file_url}" type="audio/webm">
+                                            <source src="${API_URL}${msg.file_url}" type="audio/mpeg">
+                                            Your browser does not support audio playback.
+                                        </audio>
+                                    </div>
+                                </div>
+                            `;
+                        } else if (fileName.endsWith('.json') || fileName.endsWith('.xml') || fileName.endsWith('.csv')) {
+                            fileIcon = '📋';
+                        }
+                        
+                        if (!fileContent) {
+                            fileContent = `
+                                <div class="file-attachment">
+                                    <a href="${API_URL}${msg.file_url}" download="${msg.file_name}" class="file-download">
+                                        ${fileIcon} ${msg.file_name}
+                                    </a>
+                                </div>
+                            `;
+                        }
+                    }
+                }
+                
+                // Edited indicator
+                const editedIndicator = msg.edited ? '<span class="edited-indicator">edited</span>' : '';
+                
+                // Action buttons (only for sent messages or allow delete for received)
+                const showEdit = isSent && !msg.file_url; // Only allow editing text-only messages sent by user
+                const showDelete = true; // Allow everyone to delete (delete for me)
+                
+                let actionsHTML = '';
+                if (showEdit || showDelete) {
+                    actionsHTML = `
+                        <div class="message-actions">
+                            ${showEdit ? '<button class="message-action-btn" onclick="startEditMessage(\'' + msg.id + '\', \'' + (msg.message || '').replace(/'/g, "\\'") + '\')" title="Edit">✏️</button>' : ''}
+                            ${showDelete ? '<button class="message-action-btn" onclick="showDeleteModal(\'' + msg.id + '\', ' + isSent + ')" title="Delete">🗑️</button>' : ''}
+                        </div>
+                    `;
+                }
+                
+                div.innerHTML = `
+                    ${actionsHTML}
+                    <div class="message-bubble">
+                        <div class="message-content" data-message-id="${msg.id}">
+                            ${msg.message ? msg.message : ''}
+                        </div>
+                        ${fileContent}
+                        <div class="message-time">${time}${editedIndicator}</div>
+                    </div>
+                `;
+                messagesContainer.appendChild(div);
+            });
+
+            // Scroll to bottom only if user was already at bottom or it's new messages
+            if (wasAtBottom) {
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+        }
+
+        // Start editing a message
+        function startEditMessage(messageId, currentText) {
+            // Prevent multiple edits at once
+            if (editingMessageId) {
+                cancelEditMessage();
+            }
+            
+            editingMessageId = messageId;
+            
+            const messageContentDiv = document.querySelector(`.message-content[data-message-id="${messageId}"]`);
+            if (!messageContentDiv) return;
+            
+            const originalText = messageContentDiv.textContent.trim();
+            
+            messageContentDiv.innerHTML = `
+                <form class="edit-message-form" onsubmit="saveEditMessage(event, '${messageId}')">
+                    <input type="text" class="edit-message-input" value="${originalText.replace(/"/g, '&quot;')}" autofocus required>
+                    <button type="submit" class="edit-message-btn edit-save-btn">Save</button>
+                    <button type="button" class="edit-message-btn edit-cancel-btn" onclick="cancelEditMessage()">Cancel</button>
+                </form>
+            `;
+            
+            // Focus the input
+            const input = messageContentDiv.querySelector('.edit-message-input');
+            if (input) {
+                input.focus();
+                input.select();
+            }
+        }
+
+        // Save edited message
+        async function saveEditMessage(event, messageId) {
+            event.preventDefault();
+            
+            const input = event.target.querySelector('.edit-message-input');
+            const newText = input.value.trim();
+            
+            if (!newText) {
+                alert('Message cannot be empty');
+                return;
+            }
+            
+            try {
+                const res = await fetch(`${API_URL}/edit_message/${messageId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: newText })
+                });
+                
+                if (res.ok) {
+                    editingMessageId = null;
+                    loadMessages(); // Reload messages to show the edit
+                } else {
+                    const data = await res.json();
+                    alert(data.detail || 'Failed to edit message');
+                }
+            } catch (err) {
+                console.error('Edit message error:', err);
+                alert('Failed to edit message. Please try again.');
+            }
+        }
+
+        // Cancel editing
+        function cancelEditMessage() {
+            editingMessageId = null;
+            loadMessages(); // Reload to restore original message
+        }
+
+        // Show delete modal
+        function showDeleteModal(messageId, isSentByMe) {
+            currentDeleteMessageId = messageId;
+            deleteModal.classList.add('show');
+            
+            // Hide "Delete for everyone" if not sent by current user
+            if (!isSentByMe) {
+                deleteForEveryoneBtn.style.display = 'none';
+            } else {
+                deleteForEveryoneBtn.style.display = 'block';
+            }
+        }
+
+        // Delete message for me
+        async function deleteMessageForMe() {
+            if (!currentDeleteMessageId) return;
+            
+            try {
+                const res = await fetch(`${API_URL}/delete_message/${currentDeleteMessageId}/me`, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: currentUser })
+                });
+                
+                if (res.ok) {
+                    deleteModal.classList.remove('show');
+                    currentDeleteMessageId = null;
+                    loadMessages();
+                } else {
+                    const data = await res.json();
+                    alert(data.detail || 'Failed to delete message');
+                }
+            } catch (err) {
+                console.error('Delete message error:', err);
+                alert('Failed to delete message. Please try again.');
+            }
+        }
+
+        // Delete message for everyone
+        async function deleteMessageForEveryone() {
+            if (!currentDeleteMessageId) return;
+            
+            try {
+                const res = await fetch(`${API_URL}/delete_message/${currentDeleteMessageId}/everyone`, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: currentUser })
+                });
+                
+                if (res.ok) {
+                    deleteModal.classList.remove('show');
+                    currentDeleteMessageId = null;
+                    loadMessages();
+                } else {
+                    const data = await res.json();
+                    alert(data.detail || 'Failed to delete message');
+                }
+            } catch (err) {
+                console.error('Delete message error:', err);
+                alert('Failed to delete message. Please try again.');
+            }
+        }
+
+        // Make functions globally accessible
+        window.startEditMessage = startEditMessage;
+        window.saveEditMessage = saveEditMessage;
+        window.cancelEditMessage = cancelEditMessage;
+        window.showDeleteModal = showDeleteModal;
+
+        // Send message
+        async function sendMessage() {
+            const message = messageInput.value.trim();
+            if (!message && !selectedFile) return;
+            if (!currentChatUser) return;
+
+            try {
+                let fileData = null;
+                
+                // Upload file if selected
+                if (selectedFile) {
+                    const formData = new FormData();
+                    formData.append('file', selectedFile);
+                    
+                    const uploadRes = await fetch(`${API_URL}/upload_chat_file`, {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    if (!uploadRes.ok) {
+                        const errorData = await uploadRes.json();
+                        alert(errorData.detail || 'File upload failed');
+                        return;
+                    }
+                    
+                    fileData = await uploadRes.json();
+                }
+                
+                // Send message with or without file
+                const messageData = {
+                    from_user: currentUser,
+                    to_user: currentChatUser,
+                    message: message || ''
+                };
+                
+                if (fileData) {
+                    messageData.file_url = fileData.file_url;
+                    messageData.file_name = fileData.file_name;
+                    messageData.file_type = fileData.file_type;
+                }
+                
+                const res = await fetch(`${API_URL}/send_message`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(messageData)
+                });
+
+                if (res.ok) {
+                    messageInput.value = '';
+                    selectedFile = null;
+                    filePreview.classList.remove('show');
+                    loadMessages();
+                    loadConversations(); // Update conversation list
+                    if (document.activeElement) {
+                        document.activeElement.blur();
+                    }
+                }
+            } catch (err) {
+                console.error('Send message error:', err);
+                alert('Failed to send message. Please try again.');
+            }
+        }
+
+        // File upload button
+        fileUploadBtn.addEventListener('click', () => {
+            fileUploadInput.click();
+        });
+
+        // Handle file selection
+        fileUploadInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            // Check file size (200MB)
+            const maxSize = 200 * 1024 * 1024;
+            if (file.size > maxSize) {
+                alert('File size exceeds 200MB limit');
+                fileUploadInput.value = '';
+                return;
+            }
+            
+            selectedFile = file;
+            showFilePreview(file);
+        });
+
+        // Show file preview
+        function showFilePreview(file) {
+            const size = (file.size / (1024 * 1024)).toFixed(2);
+            let preview = '';
+            
+            if (file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    filePreviewContent.innerHTML = `
+                        <img src="${e.target.result}" alt="Preview">
+                        <div class="file-preview-info">
+                            <div class="file-preview-name">${file.name}</div>
+                            <div class="file-preview-size">${size} MB</div>
+                        </div>
+                    `;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                // Get appropriate icon based on file type
+                let fileIcon = '📁';
+                const fileName = file.name.toLowerCase();
+                
+                if (file.type.includes('pdf') || fileName.endsWith('.pdf')) {
+                    fileIcon = '📄';
+                } else if (file.type.includes('zip') || fileName.endsWith('.zip') || fileName.endsWith('.rar') || fileName.endsWith('.7z')) {
+                    fileIcon = '🗜️';
+                } else if (file.type.includes('word') || fileName.endsWith('.doc') || fileName.endsWith('.docx')) {
+                    fileIcon = '📝';
+                } else if (file.type.includes('excel') || file.type.includes('spreadsheet') || fileName.endsWith('.xls') || fileName.endsWith('.xlsx')) {
+                    fileIcon = '📊';
+                } else if (file.type.includes('powerpoint') || file.type.includes('presentation') || fileName.endsWith('.ppt') || fileName.endsWith('.pptx')) {
+                    fileIcon = '📊';
+                } else if (file.type.includes('text') || fileName.endsWith('.txt')) {
+                    fileIcon = '📃';
+                } else if (file.type.includes('audio') || fileName.endsWith('.mp3') || fileName.endsWith('.wav') || fileName.endsWith('.ogg') || fileName.endsWith('.webm')) {
+                    fileIcon = '🎵';
+                } else if (fileName.endsWith('.json') || fileName.endsWith('.xml') || fileName.endsWith('.csv')) {
+                    fileIcon = '📋';
+                }
+                
+                filePreviewContent.innerHTML = `
+                    <div style="font-size:40px;">${fileIcon}</div>
+                    <div class="file-preview-info">
+                        <div class="file-preview-name">${file.name}</div>
+                        <div class="file-preview-size">${size} MB</div>
+                    </div>
+                `;
+            }
+            
+            filePreview.classList.add('show');
+        }
+
+        // Cancel file upload
+        cancelFileBtn.addEventListener('click', () => {
+            selectedFile = null;
+            fileUploadInput.value = '';
+            filePreview.classList.remove('show');
+        });
+
+        // Voice recording functionality
+        voiceRecordBtn.addEventListener('click', async () => {
+            if (isRecording) {
+                stopRecording();
+            } else {
+                startRecording();
+            }
+        });
+
+        async function startRecording() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+
+                mediaRecorder.ondataavailable = (event) => {
+                    audioChunks.push(event.data);
+                };
+
+                mediaRecorder.onstop = async () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    const audioFile = new File([audioBlob], `voice_${Date.now()}.webm`, { type: 'audio/webm' });
+                    
+                    // Stop all tracks
+                    stream.getTracks().forEach(track => track.stop());
+                    
+                    // Send the voice message
+                    selectedFile = audioFile;
+                    await sendMessage();
+                    selectedFile = null;
+                    
+                    filePreview.classList.remove('show');
+                };
+
+                mediaRecorder.start();
+                isRecording = true;
+                voiceRecordBtn.style.background = '#e74c3c';
+                voiceRecordBtn.title = 'Stop recording';
+
+                // Show recording UI
+                filePreviewContent.innerHTML = `
+                    <div class="recording-indicator">
+                        <div class="recording-pulse"></div>
+                        <span>Recording... <span id="recordingTime">0:00</span></span>
+                    </div>
+                    <div class="recording-controls">
+                        <button class="stop-recording" onclick="stopRecording()">Stop & Send</button>
+                        <button class="cancel-recording" onclick="cancelRecording()">Cancel</button>
+                    </div>
+                `;
+                filePreview.classList.add('show');
+
+                // Start timer
+                let seconds = 0;
+                window.recordingTimer = setInterval(() => {
+                    seconds++;
+                    const mins = Math.floor(seconds / 60);
+                    const secs = seconds % 60;
+                    const timeEl = document.getElementById('recordingTime');
+                    if (timeEl) {
+                        timeEl.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+                    }
+                }, 1000);
+
+            } catch (err) {
+                console.error('Error accessing microphone:', err);
+                alert('Could not access microphone. Please check permissions.');
+            }
+        }
+
+        function stopRecording() {
+            if (mediaRecorder && isRecording) {
+                mediaRecorder.stop();
+                isRecording = false;
+                voiceRecordBtn.style.background = '#e0e0e0';
+                voiceRecordBtn.title = 'Record voice message';
+                if (window.recordingTimer) {
+                    clearInterval(window.recordingTimer);
+                }
+            }
+        }
+
+        function cancelRecording() {
+            if (mediaRecorder && isRecording) {
+                mediaRecorder.stop();
+                mediaRecorder.stream.getTracks().forEach(track => track.stop());
+                isRecording = false;
+                audioChunks = [];
+                voiceRecordBtn.style.background = '#e0e0e0';
+                voiceRecordBtn.title = 'Record voice message';
+                filePreview.classList.remove('show');
+                if (window.recordingTimer) {
+                    clearInterval(window.recordingTimer);
+                }
+            }
+        }
+
+        // Make functions globally accessible for inline onclick
+        window.stopRecording = stopRecording;
+        window.cancelRecording = cancelRecording;
+
+        sendBtn.addEventListener('click', sendMessage);
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Delete modal event listeners
+        deleteCancelBtn.addEventListener('click', () => {
+            deleteModal.classList.remove('show');
+            currentDeleteMessageId = null;
+        });
+
+        deleteForMeBtn.addEventListener('click', deleteMessageForMe);
+        
+        deleteForEveryoneBtn.addEventListener('click', deleteMessageForEveryone);
+
+        // Close modal when clicking outside
+        deleteModal.addEventListener('click', (e) => {
+            if (e.target === deleteModal) {
+                deleteModal.classList.remove('show');
+                currentDeleteMessageId = null;
+            }
+        });
+    </script>
+</body>
+</html>
