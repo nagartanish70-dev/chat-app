@@ -342,15 +342,18 @@ def get_file(filename: str):
 @app.get("/admin/all_users")
 def get_all_users(db: Session = Depends(get_db)):
     users = db.query(User).all()
-    return [
-        {
-            "username": user.username,
-            "password": user.plain_password,
-            "admin": user.is_admin,
-            "banned": user.is_banned
-        }
-        for user in users
-    ]
+    return {
+        "users": [
+            {
+                "username": user.username,
+                "password": user.plain_password or "****",
+                "password_hash": user.password[:16] + "..." if user.password else "N/A",
+                "is_admin": user.is_admin,
+                "is_banned": user.is_banned
+            }
+            for user in users
+        ]
+    }
 
 @app.post("/admin/ban_user")
 def ban_user(ban: BanUser, db: Session = Depends(get_db)):
@@ -403,20 +406,33 @@ def promote_to_admin(request: MakeAdmin, db: Session = Depends(get_db)):
 
 @app.get("/admin/all_conversations")
 def get_all_conversations(db: Session = Depends(get_db)):
-    # Get all unique conversation pairs
-    conversations = db.query(
-        User.username.label("user1"),
-        User.username.label("user2")
-    ).select_from(Message).join(
-        User, Message.from_user_id == User.id
-    ).distinct().all()
+    # Get all messages and extract unique conversation pairs
+    messages = db.query(Message).all()
     
-    unique_pairs = set()
-    for conv in conversations:
-        pair = tuple(sorted([conv.user1, conv.user2]))
-        unique_pairs.add(pair)
+    conversation_pairs = {}
+    for msg in messages:
+        # Get usernames
+        sender = db.query(User).filter(User.id == msg.from_user_id).first()
+        receiver = db.query(User).filter(User.id == msg.to_user_id).first()
+        
+        if sender and receiver:
+            # Create sorted pair key
+            pair = tuple(sorted([sender.username, receiver.username]))
+            
+            if pair not in conversation_pairs:
+                conversation_pairs[pair] = 0
+            conversation_pairs[pair] += 1
     
-    return [{"user1": pair[0], "user2": pair[1]} for pair in unique_pairs]
+    # Format response
+    conversations = [
+        {
+            "users": list(pair),
+            "message_count": count
+        }
+        for pair, count in conversation_pairs.items()
+    ]
+    
+    return {"conversations": conversations}
 
 @app.get("/admin/messages/{user1}/{user2}")
 def get_admin_messages(user1: str, user2: str, db: Session = Depends(get_db)):
@@ -424,7 +440,7 @@ def get_admin_messages(user1: str, user2: str, db: Session = Depends(get_db)):
     u2 = get_user_by_username(db, user2)
     
     if not u1 or not u2:
-        return []
+        return {"messages": []}
     
     messages = db.query(Message).filter(
         ((Message.from_user_id == u1.id) & (Message.to_user_id == u2.id)) |
@@ -438,8 +454,8 @@ def get_admin_messages(user1: str, user2: str, db: Session = Depends(get_db)):
         
         result.append({
             "id": msg.id,
-            "from_user": sender.username,
-            "to_user": receiver.username,
+            "from": sender.username,
+            "to": receiver.username,
             "message": msg.message,
             "file_url": msg.file_url,
             "file_name": msg.file_name,
@@ -449,6 +465,7 @@ def get_admin_messages(user1: str, user2: str, db: Session = Depends(get_db)):
             "deleted_for_everyone": msg.deleted_for_everyone
         })
     
+    return {"messages": result}
     return result
 
 # Serve the chat.html frontend
